@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import * as Font from 'expo-font';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { UIBtn } from './components/Buttons';
+import { UICheckbox } from './components/Checkbox';
 
 export default function App() {
   const [ loading, setLoading ] = useState(true);
@@ -24,6 +25,7 @@ export default function App() {
         fontFamily: 'Pangram'
       }}>Open up App.tsx to test working on your app!</Text>
       <UIBtn type='secondary' size='lg' title='Lorem ipsum'></UIBtn>
+      <UICheckbox checked={true} onPress={() => console.log('Pressed')} />
     </View>
     : null
   );

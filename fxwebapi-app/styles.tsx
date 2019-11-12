@@ -8,6 +8,7 @@ const colors = {
     btnText: '#FFFFFF'
 }
 
+// Button styles
 const buttons = StyleSheet.create({
     base: {
         flex: 0,
@@ -60,5 +61,13 @@ const buttonText = StyleSheet.create({
         fontSize: 14
     },
 })
+
+// Checkbox styles
+const checkbox = StyleSheet.create({
+    primary: {
+        backgroundColor: colors.btnPrimary,
+        color: colors.btnText
+    }
+});
 
 export { buttons, buttonText, colors };
