@@ -4,7 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { colors } from '../styles';
 
 interface UICheckboxProps {
-    onPress: (event: GestureResponderEvent) => void;
+    onPress?: (event: GestureResponderEvent) => void;
     checked: boolean;
 }
 

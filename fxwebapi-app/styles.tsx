@@ -24,7 +24,7 @@ const text = StyleSheet.create({
         fontFamily: 'Roboto',
         fontSize: 14,
         color: colors.textPrimary
-    }
+    },
 });
 
 // Button styles
