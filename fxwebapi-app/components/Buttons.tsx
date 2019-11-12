@@ -7,18 +7,17 @@ interface UIBtnProps {
     type: 'primary' | 'secondary';
     size: 'lg' | 'md' | 'sm';
     disabled?: boolean;
-    width?: number;
+    style?: Object;
     onPress?: (event: GestureResponderEvent) => void;
 }
 
 const UIBtn = (props: UIBtnProps) => {
-    const userStyle = props.width ? { width: props.width } : null;
     return (
         <TouchableOpacity style={[
             buttons.base,
             buttons[props.type],
             buttons[props.size],
-            userStyle
+            props.style
         ]} onPress={props.onPress}>
             <Text style={[buttonText[props.type], buttonText[props.size]]}>{props.title}</Text>
         </TouchableOpacity>

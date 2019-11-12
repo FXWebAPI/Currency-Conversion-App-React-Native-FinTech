@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import * as Font from 'expo-font';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
 import { UIBtn } from './components/Buttons';
 import { UICheckbox } from './components/Checkbox';
+import { UIInput } from './components/Inputs';
+import { text } from './styles';
 
 export default function App() {
   const [ loading, setLoading ] = useState(true);
@@ -21,11 +23,38 @@ export default function App() {
   return (
     !loading ?
     <View style={styles.container}>
-      <Text style={{
-        fontFamily: 'Pangram'
-      }}>Open up App.tsx to test working on your app!</Text>
-      <UIBtn type='secondary' size='lg' title='Lorem ipsum'></UIBtn>
-      <UICheckbox checked={true} onPress={() => console.log('Pressed')} />
+      <Text style={[
+        text.h1,
+        {
+          textAlign: 'left',
+          alignSelf: 'stretch',
+          paddingVertical: 24
+        }
+      ]}>Login to Trade</Text>
+      <UIInput label='Email or user name' value='johnwilliamdoe@gmail.com' type='text' onChangeText={() => {}} />
+      <UIInput label='password' value='abcdefg' type='password' onChangeText={() => {}} />
+      <View style={{
+        flex: 0,
+        flexDirection: 'row',
+        paddingTop: 18,
+        paddingBottom: 35,
+        alignContent: 'flex-start',
+        alignItems: 'center',
+        alignSelf: 'flex-start'
+      }}>
+        <UICheckbox checked={true} onPress={() => console.log('Pressed')} />
+        <Text style={[
+          text.p,
+          {
+            textAlign: 'left',
+            paddingLeft: 11
+          }
+        ]}>I agree on Terms and Conditions</Text>
+      </View>
+      <UIBtn type='primary' size='lg' title='Sign in' style={{
+        alignSelf: 'stretch',
+        width: 'auto'
+      }}></UIBtn>
     </View>
     : null
   );
@@ -37,5 +66,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 16,
   },
 });

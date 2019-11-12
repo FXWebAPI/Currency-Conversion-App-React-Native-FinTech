@@ -1,7 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, GestureResponderEvent } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-
 import { colors } from '../styles';
 
 interface UICheckboxProps {
@@ -16,6 +15,5 @@ const UICheckbox = (props : UICheckboxProps) => {
         </TouchableOpacity>
     )
 }
-
 
 export { UICheckbox };

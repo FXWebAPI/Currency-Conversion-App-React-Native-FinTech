@@ -5,8 +5,27 @@ const colors = {
     btnDisabled: '#A7C6FD',
     btnHover: '#1260E6',
     btnSecondary: 'transparent',
-    btnText: '#FFFFFF'
+    btnText: '#FFFFFF',
+    textPrimary: '#2F2F2F',
+    borderPrimary: '#BBBBBB',
+    inputFocused: '#E6EFFE',
+    inputLabel: '#949494',
+    darkIcons: '#1E1E1E',
+    inactiveIcons: '#949494'
 }
+
+const text = StyleSheet.create({
+    h1: {
+        fontFamily: 'Pangram',
+        fontSize: 23,
+        color: colors.textPrimary
+    },
+    p: {
+        fontFamily: 'Roboto',
+        fontSize: 14,
+        color: colors.textPrimary
+    }
+});
 
 // Button styles
 const buttons = StyleSheet.create({
@@ -70,4 +89,44 @@ const checkbox = StyleSheet.create({
     }
 });
 
-export { buttons, buttonText, colors };
+// Input styles
+const input = StyleSheet.create({
+    container: {
+        marginVertical: 8,
+        alignSelf: 'stretch',
+        borderBottomColor: colors.borderPrimary,
+        borderBottomWidth: 1,
+        paddingHorizontal: 12,
+        paddingVertical: 10,
+        borderTopLeftRadius: 4,
+        borderTopRightRadius: 4,
+        backgroundColor: colors.btnSecondary,
+    },
+    containerFocus: {
+        backgroundColor: colors.inputFocused,
+        borderBottomColor: colors.btnPrimary
+    },
+    base: {
+        fontFamily: 'Roboto',
+        fontSize: 16,
+        color: colors.textPrimary,
+        paddingVertical: 8,
+    },
+    focus: {
+        paddingBottom: 0,
+        paddingTop: 16,
+    },
+    labelBase: {
+        position: 'absolute',
+        left: 12,
+        top: 22,
+        fontSize: 16,
+        color: colors.inputLabel,
+    },
+    labelFocus: {
+        fontSize: 12,
+        top: 9
+    }
+})
+
+export { buttons, buttonText, colors, input, text };
