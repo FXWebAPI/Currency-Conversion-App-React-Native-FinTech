@@ -119,13 +119,11 @@ const input = StyleSheet.create({
     labelBase: {
         position: 'absolute',
         left: 12,
-        top: 22,
         fontSize: 16,
         color: colors.inputLabel,
     },
     labelFocus: {
         fontSize: 12,
-        top: 9
     }
 })
 

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Animated } from 'react-native';
 import { input, colors } from '../styles';
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -13,7 +13,14 @@ interface UIInputProps {
 const UIInput = (props: UIInputProps) => {
     const [ focused, setFocused ] = useState(false);
     const [ hidden, setHidden ] = useState(true);
+    const placeholderTop = new Animated.Value(22);
 
+    useEffect(() => {
+        Animated.spring(placeholderTop, {
+            toValue: focused ? 9 : 22,
+        }).start();
+    }, [focused]);
+    
     return (
         <View style={[
             input.container,
@@ -21,12 +28,13 @@ const UIInput = (props: UIInputProps) => {
         ]}>
             {
             !focused && props.value ? null : 
-            <Text style={[
-                input.labelBase,
-                focused ? input.labelFocus : {}
-            ]}>
+            <Animated.Text style={{
+                ...input.labelBase,
+                ...(focused ? input.labelFocus : {}),
+                top: placeholderTop
+            }}>
                 {props.label}
-            </Text>
+            </Animated.Text>
             }
             <TextInput 
                 value={props.value}
