@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import * as Font from 'expo-font';
-import { View } from 'react-native';
+import { View, StatusBar } from 'react-native';
 import LoginScreen from './screens/LoginScreen';
 
 export default function App() {
-  const [ loading, setLoading ] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadAssets = async () => {
@@ -19,11 +19,12 @@ export default function App() {
 
   return (
     !loading ?
-    <View style={{
-      flex: 1
-    }}>
-      <LoginScreen />
-    </View>
-    : null
+      <View style={{
+        flex: 1,
+        paddingTop: StatusBar.currentHeight
+      }}>
+        <LoginScreen />
+      </View>
+      : null
   );
 }
