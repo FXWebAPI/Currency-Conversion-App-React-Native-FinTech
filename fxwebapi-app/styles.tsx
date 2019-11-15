@@ -25,6 +25,11 @@ const text = StyleSheet.create({
     fontSize: 14,
     color: colors.textPrimary
   },
+  leftTitle: {
+    textAlign: 'left',
+    alignSelf: 'stretch',
+    paddingVertical: 24
+  }
 });
 
 // Button styles

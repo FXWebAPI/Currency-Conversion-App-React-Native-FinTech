@@ -31,11 +31,7 @@ export default function LoginScreen() {
       />
       <Text style={[
         text.h1,
-        {
-          textAlign: 'left',
-          alignSelf: 'stretch',
-          paddingVertical: 24
-        }
+        text.leftTitle
       ]}>Login to Trade</Text>
       <UIInput label='Email or user name' value={username} type='text'
         onChangeText={(text) => setUsername(text)} />

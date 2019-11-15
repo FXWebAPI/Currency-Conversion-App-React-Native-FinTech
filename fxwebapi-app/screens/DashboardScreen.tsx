@@ -1,12 +1,15 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-
+import { text } from '../styles';
 
 export default function DashboardScreen() {
 
   return (
     <View style={styles.container}>
-      <Text>ASDF</Text>
+      <Text style={[
+        text.h1,
+        text.leftTitle
+      ]}>Dashboard</Text>
     </View>
   );
 }
