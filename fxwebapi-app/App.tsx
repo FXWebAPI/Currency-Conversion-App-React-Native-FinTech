@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import * as Font from 'expo-font';
 import { View, StatusBar } from 'react-native';
-import LoginScreen from './screens/LoginScreen';
+import Routes from './Routes';
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -23,7 +23,7 @@ export default function App() {
         flex: 1,
         paddingTop: StatusBar.currentHeight
       }}>
-        <LoginScreen />
+        <Routes />
       </View>
       : null
   );
