@@ -11,7 +11,8 @@ const colors = {
   inputFocused: '#E6EFFE',
   inputLabel: '#949494',
   darkIcons: '#1E1E1E',
-  inactiveIcons: '#949494'
+  inactiveIcons: '#949494',
+  live: '#1BDB62',
 }
 
 const text = StyleSheet.create({
@@ -130,6 +131,6 @@ const input = StyleSheet.create({
   labelFocus: {
     fontSize: 12,
   }
-})
+});
 
 export { buttons, buttonText, colors, input, text };

@@ -1,31 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
-import Chart from '../chart/Chart';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { UIStatus } from '../components/Status';
 import { text } from '../styles';
 
 export default function DashboardScreen() {
-  const [ data, setData ] = useState([ 
-    { genre: 'Sports', sold: 275 },
-    { genre: 'Strategy', sold: 115 },
-    { genre: 'Action', sold: 120 },
-    { genre: 'Shooter', sold: 350 },
-    { genre: 'Other', sold: 150 },
-  ]);
-  useEffect(() => {
-    const testDataChange = () => {
-      let data2 = [
-        { genre: 'A', sold: 275 },
-        { genre: 'B', sold: 115 },
-        { genre: 'C', sold: 120 },
-        { genre: 'D', sold: 350 },
-        { genre: 'Other', sold: 200 },
-        { genre: 'E', sold: 122 },
-      ];
-      setTimeout(() => setData(data2), 2000);
-    }
-
-    testDataChange();
-  }, []);
 
   return (
     <View style={styles.container}>
@@ -33,10 +11,13 @@ export default function DashboardScreen() {
         text.h1,
         text.leftTitle
       ]}>Dashboard</Text>
-      <Chart style={{
-        width: Dimensions.get('window').width,
-        height: 300
-      }} data={data} />
+
+      <UIStatus status='live' text='Live rates. Update: '
+        countdown={30} onCountdownEnd={() => {
+          console.log('Update rates here.');
+        }}
+        infinite
+      />
     </View>
   );
 }
