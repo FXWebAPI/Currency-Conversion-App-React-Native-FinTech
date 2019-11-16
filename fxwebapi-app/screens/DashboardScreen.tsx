@@ -1,62 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Platform, Dimensions } from 'react-native';
-import { WebView } from 'react-native-webview';
-import { Asset } from 'expo-asset';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import Chart from '../chart/Chart';
 import { text } from '../styles';
 
-const Chart = () => {
-  const [ html, setHTML ] = useState(null);
+export default function DashboardScreen() {
+  const [ data, setData ] = useState([ 
+    { genre: 'Sports', sold: 275 },
+    { genre: 'Strategy', sold: 115 },
+    { genre: 'Action', sold: 120 },
+    { genre: 'Shooter', sold: 350 },
+    { genre: 'Other', sold: 150 },
+  ]);
   useEffect(() => {
-    const loadHTML = async () => {
-      let HTMLFile = Asset.fromModule(require('../chart/index.html'));
-      
-      if (!HTMLFile.localUri) {
-        await Asset.loadAsync(require('../chart/index.html'));
-        HTMLFile = Asset.fromModule(require('../chart/index.html'));
-      }
-
-      setHTML(HTMLFile.localUri);
+    const testDataChange = () => {
+      let data2 = [
+        { genre: 'A', sold: 275 },
+        { genre: 'B', sold: 115 },
+        { genre: 'C', sold: 120 },
+        { genre: 'D', sold: 350 },
+        { genre: 'Other', sold: 200 },
+        { genre: 'E', sold: 122 },
+      ];
+      setTimeout(() => setData(data2), 2000);
     }
 
-    loadHTML();
+    testDataChange();
   }, []);
-  return (
-    <WebView
-      source={
-        Platform.OS === 'android' ?
-        { uri: html } : require('../chart/index.html')}
-      originWhitelist={["*"]}
-      javaScriptEnabled={true}
-      domStorageEnabled={true}
-      allowFileAccess={true}
-      injectedJavaScript={`
-      const chart = new F2.Chart({
-        id: 'myChart', // pass node's id
-        width: 375,
-        height: 260,
-        pixelRatio: window.devicePixelRatio
-      });
-      const data = [ 
-        { genre: 'Sports', sold: 275 },
-        { genre: 'Strategy', sold: 115 },
-        { genre: 'Action', sold: 120 },
-        { genre: 'Shooter', sold: 350 },
-        { genre: 'Other', sold: 150 },
-      ];
-      
-      chart.source(data); // load the data
-      chart.interval().position('genre*sold').color('genre');
-      chart.render();
-      `}
-      style={{
-        width: Dimensions.get('window').width,
-        height: 400
-      }}
-    />
-  );
-};
-
-export default function DashboardScreen() {
 
   return (
     <View style={styles.container}>
@@ -64,7 +33,10 @@ export default function DashboardScreen() {
         text.h1,
         text.leftTitle
       ]}>Dashboard</Text>
-      <Chart />
+      <Chart style={{
+        width: Dimensions.get('window').width,
+        height: 300
+      }} data={data} />
     </View>
   );
 }
