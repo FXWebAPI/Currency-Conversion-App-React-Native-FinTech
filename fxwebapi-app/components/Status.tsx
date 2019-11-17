@@ -31,6 +31,7 @@ const UIStatus = (props: UIStatusProps) => {
       flexDirection: 'row',
       alignItems: 'center',
       alignSelf: 'flex-start',
+      marginBottom: 24
     }}>
       <View style={{
         backgroundColor: colors[props.status],

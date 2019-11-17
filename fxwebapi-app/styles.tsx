@@ -21,6 +21,11 @@ const text = StyleSheet.create({
     fontSize: 23,
     color: colors.textPrimary
   },
+  h2: {
+    fontFamily: 'Pangram',
+    fontSize: 18,
+    color: colors.textPrimary
+  },
   p: {
     fontFamily: 'Roboto',
     fontSize: 14,
@@ -30,7 +35,7 @@ const text = StyleSheet.create({
     textAlign: 'left',
     alignSelf: 'stretch',
     paddingVertical: 24
-  }
+  },
 });
 
 // Button styles
@@ -133,4 +138,24 @@ const input = StyleSheet.create({
   }
 });
 
-export { buttons, buttonText, colors, input, text };
+const dashboardCard = StyleSheet.create({
+  btn: {
+    width: 128,
+    height: 72,
+    borderRadius: 4,
+    flex: 0,
+    alignContent: 'center',
+    flexDirection: 'column',
+    paddingHorizontal: 16,
+    paddingVertical: 8
+  },
+  btnText: {
+    flex: 0,
+    alignItems: 'center',
+    flexDirection: 'row',
+    alignSelf: 'flex-end',
+    paddingTop: 4,
+  }
+});
+
+export { buttons, buttonText, colors, input, text, dashboardCard };
