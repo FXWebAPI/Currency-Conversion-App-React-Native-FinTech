@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, GestureResponderEvent } from 'react-native';
 import { buttons, buttonText } from '../styles';
+import { MaterialIcons } from '@expo/vector-icons';
 
 interface UIBtnProps {
   title: string;
@@ -24,4 +25,32 @@ const UIBtn = (props: UIBtnProps) => {
   )
 }
 
-export { UIBtn };
+interface UIAddRoundProps {
+  size: number;
+  rotate?: string;
+  fill: string;
+  color: string;
+  onPress?: () => void;
+}
+
+const UIAddRound = (props: UIAddRoundProps) => (
+  <TouchableOpacity style={{
+    backgroundColor: props.fill,
+    width: props.size,
+    height: props.size,
+    borderRadius: 100,
+    transform: [{ rotate: props.rotate || '0deg' }]
+  }} onPress={props.onPress}>
+    <MaterialIcons
+      name='add'
+      size={props.size / 2}
+      color={props.color}
+      style={{
+        padding: props.size / 4
+      }}
+    />
+  </TouchableOpacity>
+);
+
+
+export { UIBtn, UIAddRound };
