@@ -1,12 +1,5 @@
 const WS_ADDR = 'wss://demo.fxcib.com/api/WebSocket/Getees?key=123123123';
 
-// interface BaseChartData {
-//   currencyPair: 'EUR/USD' | 'EUR/GBP' | 'USD|EUR' | 'USD|GBP' | 'GBP|EUR' | 'GBP|USD';
-//   granularity: 'S5' | 'S10' | 'S15' | 'S30' | 'M1' | 'M3' | 'M4'
-//   | 'M5' | 'M10' | 'M15' | 'M30' | 'H1' | 'H2' | 'H3' | 'H4' | 'H6' | 'H8' | 'H12' | 'D' | 'W' | 'M';
-//   priceType?: 'Bid'|'Ask';
-//   dates?: {start: Date, end: Date};
-// }
 export interface BaseChartData {
   currencyPair: 'EUR/USD' | 'EUR/GBP' | 'USD|EUR' | 'USD|GBP' | 'GBP|EUR' | 'GBP|USD';
   granularity: 'S5' | 'S10' | 'S15' | 'S30' | 'M1' | 'M3' | 'M4'

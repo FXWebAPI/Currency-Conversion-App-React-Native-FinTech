@@ -1,19 +1,24 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, Text, ScrollView, View, TouchableOpacity } from 'react-native';
-import { UIStatus } from '../components/Status';
-import { UIDashboardCard } from '../components/DashboardCard';
-import { text, colors } from '../styles';
-import { LinearGradient } from 'expo-linear-gradient';
-import { UIAddRound } from '../components/Buttons';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { text } from '../styles';
 import { MaterialIcons } from '@expo/vector-icons';
 import { NavigationStackScreenProps } from 'react-navigation-stack';
 import Chart from '../chart/Chart';
 import { ws, BaseChartData } from '../ws';
+import { GranularityButtons } from '../components/GranularityButtons';
 
 interface FXChartScreenProps extends NavigationStackScreenProps { };
 
+const GRANULARITY_VALUES = [
+  {label: '1H', value: 'M1'},
+  {label: '1D', value: 'H1'},
+  {label: '1W', value: 'D'},
+  {label: '1M', value: 'W'},
+  {label: '1Y', value: 'M'},
+] as const;
+
 export default function FXChartScreen(props: FXChartScreenProps) {
-  const [ chartArgs, setChartArgs ] = useState<BaseChartData>({currencyPair: 'EUR/USD', granularity: 'H1'})
+  const [ chartArgs, setChartArgs ] = useState<BaseChartData>({currencyPair: 'EUR/USD', granularity: GRANULARITY_VALUES[0].value})
   const [ data, setData ] = useState([]);
 
   const getData = (ev: MessageEvent) => {
@@ -24,7 +29,6 @@ export default function FXChartScreen(props: FXChartScreenProps) {
   useEffect(() => {
     function initFunc() {
       ws.onMessage(getData);
-      ws.askChartData(chartArgs);
     }
 
     initFunc();
@@ -33,6 +37,10 @@ export default function FXChartScreen(props: FXChartScreenProps) {
       ws.onMessageDestroy(getData);
     }
   }, []);
+
+  useEffect(() => {
+    ws.askChartData(chartArgs);
+  }, [chartArgs]);
 
   return (
     <View style={styles.container}>
@@ -50,13 +58,28 @@ export default function FXChartScreen(props: FXChartScreenProps) {
           padding: 16
         }}>FX chart</Text>
       </View>
+
       <View style={{
-        paddingBottom: 70,
-      }}></View>
+        paddingVertical: 23,
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignContent: 'center',
+        justifyContent: 'space-around'
+      }}>
+        <Text style={{
+          ...text.bigTitle,
+        }}>EUR USD</Text>
+      </View>
+
       <Chart style={{
         flex: 1,
         alignSelf: 'stretch',
       }} chartScript='lineGraph' data={data}/>
+      <GranularityButtons 
+        values={GRANULARITY_VALUES}
+        activeValue={chartArgs.granularity}
+        onPress={(value) => setChartArgs({...chartArgs, granularity: value})}
+      />
       <View style={{
         paddingTop: 112,
       }}></View>

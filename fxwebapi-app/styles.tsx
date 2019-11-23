@@ -31,6 +31,15 @@ const text = StyleSheet.create({
     fontSize: 21,
     color: colors.textPrimary
   },
+  bigTitle: {
+    fontFamily: 'Pangram',
+    fontSize: 32,
+    color: colors.textPrimary
+  },
+  smallText: {
+    fontFamily: 'Roboto',
+    fontSize: 12
+  },
   p: {
     fontFamily: 'Roboto',
     fontSize: 14,

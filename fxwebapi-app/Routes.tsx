@@ -75,6 +75,6 @@ export default createAppContainer(createSwitchNavigator(
     App: AppTabs
   },
   {
-    initialRouteName: 'App', // DEV change to Auth afterwards
+    initialRouteName: 'Auth',
   }
 ));
