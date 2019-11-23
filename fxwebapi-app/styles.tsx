@@ -26,6 +26,11 @@ const text = StyleSheet.create({
     fontSize: 18,
     color: colors.textPrimary
   },
+  hAlt: {
+    fontFamily: 'Pangram',
+    fontSize: 21,
+    color: colors.textPrimary
+  },
   p: {
     fontFamily: 'Roboto',
     fontSize: 14,

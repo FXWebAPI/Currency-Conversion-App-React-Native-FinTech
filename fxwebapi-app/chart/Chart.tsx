@@ -5,11 +5,85 @@ import { Asset } from 'expo-asset';
 
 interface ChartProps {
   style: {},
-  data?: ObjectArray
+  data?: ObjectArray | [],
+  chartScript: 'lineGraph',
 }
 
 interface ChartState {
   html: string | boolean;
+}
+
+const chartScripts = {
+  lineGraph: (initData: ObjectArray | []) => `
+  window.chart = new F2.Chart({
+    id: 'myChart',
+    pixelRatio: window.devicePixelRatio,
+    padding: [ 40, 0, 20, 0]
+  });
+  chart.axis('open', {
+    line: null,
+    labelOffset: -13,
+    tickLine: null,
+    grid: null,
+    position: 'right',
+    label: (text, index, total) => {
+      const cfg = {
+        textAlign: 'right',
+        fill: '#949494',
+        fontSize: 11,
+        fontFamily: ['Roboto', 'sans-serif']
+      };
+      if (index === 1) {
+        cfg.text = '';
+      } else {
+        cfg.text = parseFloat(text).toFixed(4);
+      }
+      return cfg;
+    }
+  });
+  chart.axis('date', false);
+  chart.source(${JSON.stringify(initData)}, {
+    open: {
+      tickCount: 2,
+      type: 'linear',
+    },
+    date: {
+      type: 'timeCat',
+      mask: 'DD.MM.YYYY | H:mm'
+    }
+  });
+  chart.line({
+    startOnZero: false
+  }).position('date*open');
+  chart.tooltip({
+    showTooltipMarker: true,
+    showItemMarker: false,
+    showTitle: true,
+    snap: true,
+    titleStyle: {
+      fontSize: 14,
+      fill: '#2F2F2F',
+      fontWeight: 700,
+      textAlign: 'left',
+      fontFamily: ['Roboto', 'sans-serif']
+    },
+    valueStyle: {
+      fontSize: 10,
+      fill: '#949494',
+      textAlign: 'center',
+      fontFamily: ['Roboto', 'sans-serif']
+    },
+    background: {
+      fill: 'transparent',
+    },
+    onChange: (ev) => {
+      const item = ev.items[0];
+      [item.title, item.value] = [item.value, item.title];
+    },
+  })
+  chart.render();
+  true;
+  `,
 }
 
 export default class Chart extends React.Component<ChartProps, ChartState> {
@@ -53,6 +127,8 @@ export default class Chart extends React.Component<ChartProps, ChartState> {
 
   render() {
     const { html } = this.state;
+    let { chartScript, data } = this.props;
+    if (!data) data = [];
     return (
       <WebView
         ref={r => (this.webref = r)}
@@ -63,26 +139,7 @@ export default class Chart extends React.Component<ChartProps, ChartState> {
         javaScriptEnabled={true}
         domStorageEnabled={true}
         allowFileAccess={true}
-        injectedJavaScript={`
-        window.chart = new F2.Chart({
-          id: 'myChart', // pass node's id
-          width: 375,
-          height: 260,
-          pixelRatio: window.devicePixelRatio
-        });
-        const data = [ 
-          { genre: 'Sports', sold: 275 },
-          { genre: 'Strategy', sold: 115 },
-          { genre: 'Action', sold: 120 },
-          { genre: 'Shooter', sold: 350 },
-          { genre: 'Other', sold: 150 },
-        ];
-        
-        chart.source(data); // load the data
-        chart.interval().position('genre*sold').color('genre');
-        chart.render();
-        true;
-        `}
+        injectedJavaScript={chartScripts[chartScript](data)}
         style={this.props.style}
       />
     );

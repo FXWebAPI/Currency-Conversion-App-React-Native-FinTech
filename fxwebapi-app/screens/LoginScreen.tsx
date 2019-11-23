@@ -5,26 +5,30 @@ import { UICheckbox } from '../components/Checkbox';
 import { UIInput } from '../components/Inputs';
 import { UIFlagPicker } from '../components/FlagPicker';
 import { text, colors } from '../styles';
+import { NavigationSwitchScreenProps } from 'react-navigation';
 
 const languages = [
-  {value: 'en', label: 'EN', image: '../images/flags/united-kingdom.png'},
-  {value: 'pl', label: 'PL', image: '../images/flags/republic-of-poland.png'}
+  { value: 'en', label: 'EN', image: '../images/flags/united-kingdom.png' },
+  { value: 'pl', label: 'PL', image: '../images/flags/republic-of-poland.png' }
 ];
 const flagImages = [
-  (props) => <Image source={require('../images/flags/united-kingdom.png')} {...props} />,
-  (props) => <Image source={require('../images/flags/republic-of-poland.png')} {...props} />
+  (props: any) => <Image source={require('../images/flags/united-kingdom.png')} {...props} />,
+  (props: any) => <Image source={require('../images/flags/republic-of-poland.png')} {...props} />
 ]
 
-export default function LoginScreen() {
+interface LoginScreenProps extends NavigationSwitchScreenProps {
+}
+
+export default function LoginScreen(props: LoginScreenProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [agreeTOS, setAgreeTOS] = useState(true);
-  const [language, setLanguage] = useState({value: 'en', pos: 0});
+  const [language, setLanguage] = useState({ value: 'en', pos: 0 });
 
   return (
     <View style={styles.container}>
-      <UIFlagPicker 
-        onValueChange={(value, pos) => setLanguage({value, pos})}
+      <UIFlagPicker
+        onValueChange={(value, pos) => setLanguage({ value, pos })}
         selectedValue={language.value}
         image={flagImages[language.pos]}
         items={languages}
@@ -58,7 +62,7 @@ export default function LoginScreen() {
       <UIBtn type='primary' size='lg' title='Sign in' style={{
         alignSelf: 'stretch',
         width: 'auto'
-      }}></UIBtn>
+      }} onPress={() => props.navigation.navigate('App')}></UIBtn>
 
       <TouchableOpacity style={{
         marginTop: 24,

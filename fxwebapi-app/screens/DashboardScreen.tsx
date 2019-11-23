@@ -1,23 +1,60 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, ScrollView, View } from 'react-native';
+import { StyleSheet, Text, ScrollView, View, TouchableOpacity } from 'react-native';
 import { UIStatus } from '../components/Status';
 import { UIDashboardCard } from '../components/DashboardCard';
 import { text, colors } from '../styles';
 import { LinearGradient } from 'expo-linear-gradient';
 import { UIAddRound } from '../components/Buttons';
+import { MaterialIcons } from '@expo/vector-icons';
+import { NavigationStackScreenProps } from 'react-navigation-stack';
 
-export default function DashboardScreen() {
+interface DashboardScreenProps extends NavigationStackScreenProps {
+}
+
+export default function DashboardScreen(props: DashboardScreenProps) {
   const [addClicked, setAddClicked] = useState(false);
 
   return (
     <ScrollView style={styles.container}>
 
       <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}>
+        <TouchableOpacity style={{
+          padding: 16
+        }} onPress={
+          () => props.navigation.push('FXChart')
+        }>
+          <MaterialIcons name='insert-chart' size={24} />
+        </TouchableOpacity>
+        <View style={{
+          flex: 0,
+          alignSelf: 'flex-end',
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
+          <TouchableOpacity style={{
+            padding: 16
+          }}>
+            <MaterialIcons name='search' size={24} />
+          </TouchableOpacity>
+          <TouchableOpacity style={{
+            padding: 16
+          }}>
+            <MaterialIcons name='settings' size={24} />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <View style={{
         padding: 16,
       }}>
         <Text style={[
           text.h1,
-          text.leftTitle
+          text.leftTitle,
+          { paddingBottom: 24, paddingTop: 0 }
         ]}>Dashboard</Text>
 
         <UIStatus status='live' text='Live rates. Update: '

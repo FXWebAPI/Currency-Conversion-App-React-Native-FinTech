@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Animated } from 'react-native';
+import { View, TextInput, TouchableOpacity, Animated } from 'react-native';
 import { input, colors } from '../styles';
 import { MaterialIcons } from '@expo/vector-icons';
 
