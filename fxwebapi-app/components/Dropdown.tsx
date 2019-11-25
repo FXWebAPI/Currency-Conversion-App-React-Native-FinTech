@@ -16,6 +16,7 @@ interface DropdownProps {
 function Dropdown(props: DropdownProps) {
   const [displayOptions, setDisplayOptions] = useState(false);
   const activeLabel = props.values.find(({ label, value }) => value === props.activeValue).label;
+
   return (
     <>
       <TouchableOpacity
@@ -47,7 +48,7 @@ function Dropdown(props: DropdownProps) {
         },
         props.itemContainerStyle
         ]}>
-          {props.values.map(({ value, label }, index: number) =>
+          {[...props.values].map(({ value, label }, index: number) =>
             <TouchableOpacity
               onPress={() => {
                 setDisplayOptions(false);
