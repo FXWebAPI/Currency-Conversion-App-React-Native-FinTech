@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { text } from '../styles';
+import { text, colors } from '../styles';
 import { MaterialIcons } from '@expo/vector-icons';
 import { NavigationStackScreenProps } from 'react-navigation-stack';
 import Chart from '../chart/Chart';
@@ -32,6 +32,7 @@ export default function FXChartScreen(props: FXChartScreenProps) {
     currencyPair: CURRENCY_PAIRS[0].value,
     granularity: GRANULARITY_VALUES[0].value
   });
+  const [chartType, setChartType] = useState('lineGraph');
 
   const [data, setData] = useState([]);
 
@@ -110,8 +111,28 @@ export default function FXChartScreen(props: FXChartScreenProps) {
         onPress={(value) => setChartArgs({ ...chartArgs, granularity: value })}
       />
       <View style={{
-        paddingTop: 112,
-      }}></View>
+        paddingVertical: 4,
+        flex: 0,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        alignSelf: 'flex-end'
+      }}>
+        <TouchableOpacity style={{
+          padding: 12
+        }} onPress={() => setChartType('lineGraph')}>
+          <MaterialIcons name='show-chart' size={24}
+            color={chartType === 'lineGraph' ? colors.btnPrimary : colors.textPrimary}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity style={{
+          padding: 12
+        }} onPress={() => setChartType('candleChart')}>
+          <MaterialIcons name='insert-chart' size={24}
+            color={chartType === 'candleChart' ? colors.btnPrimary : colors.textPrimary}
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
