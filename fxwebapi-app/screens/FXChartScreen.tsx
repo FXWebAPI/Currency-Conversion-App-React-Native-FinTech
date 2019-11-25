@@ -9,6 +9,7 @@ import { GranularityButtons } from '../components/GranularityButtons';
 import { UICurrencyPicker } from '../components/CurrencyPicker';
 
 interface FXChartScreenProps extends NavigationStackScreenProps { };
+type chartTypes = 'lineGraph' | 'candleChart';
 
 const GRANULARITY_VALUES = [
   { label: '1H', value: 'M1' },
@@ -27,18 +28,31 @@ const CURRENCY_PAIRS = [
   // { label: 'USD EUR', value: 'USD/EUR' },
 ] as const;
 
+const CHART_TYPES = [
+  'lineGraph',
+  'candleChart'
+] as const;
+
+const MAX_DATAPOINTS = 80;
+
 export default function FXChartScreen(props: FXChartScreenProps) {
   const [chartArgs, setChartArgs] = useState<BaseChartData>({
     currencyPair: CURRENCY_PAIRS[0].value,
     granularity: GRANULARITY_VALUES[0].value
   });
-  const [chartType, setChartType] = useState('lineGraph');
+  const [chartType, setChartType] = useState<chartTypes>(CHART_TYPES[0]);
 
   const [data, setData] = useState([]);
 
   const getData = (ev: MessageEvent) => {
-    console.log('msg');
-    setData(JSON.parse(ev.data).candles);
+    let chartData = JSON.parse(ev.data).candles;
+    chartData = chartData.slice(-MAX_DATAPOINTS); // get only MAX_DATAPOINTS of data
+    // format data for candlesticks
+    chartData.forEach((obj) => {
+      obj.range = [ obj.open, obj.close, obj.low, obj.high ];
+      obj.trend = obj.open <= obj.close ? 0 : 1;
+    });
+    setData(chartData);
   }
 
   useEffect(() => {
@@ -104,7 +118,7 @@ export default function FXChartScreen(props: FXChartScreenProps) {
       <Chart style={{
         flex: 1,
         alignSelf: 'stretch',
-      }} chartScript='lineGraph' data={data} />
+      }} chartScript={chartType} data={data} />
       <GranularityButtons
         values={GRANULARITY_VALUES}
         activeValue={chartArgs.granularity}
@@ -120,16 +134,16 @@ export default function FXChartScreen(props: FXChartScreenProps) {
       }}>
         <TouchableOpacity style={{
           padding: 12
-        }} onPress={() => setChartType('lineGraph')}>
+        }} onPress={() => setChartType(CHART_TYPES[0])}>
           <MaterialIcons name='show-chart' size={24}
-            color={chartType === 'lineGraph' ? colors.btnPrimary : colors.textPrimary}
+            color={chartType === CHART_TYPES[0] ? colors.btnPrimary : colors.textPrimary}
           />
         </TouchableOpacity>
         <TouchableOpacity style={{
           padding: 12
-        }} onPress={() => setChartType('candleChart')}>
+        }} onPress={() => setChartType(CHART_TYPES[1])}>
           <MaterialIcons name='insert-chart' size={24}
-            color={chartType === 'candleChart' ? colors.btnPrimary : colors.textPrimary}
+            color={chartType === CHART_TYPES[1] ? colors.btnPrimary : colors.textPrimary}
           />
         </TouchableOpacity>
       </View>
