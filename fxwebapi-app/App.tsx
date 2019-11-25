@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as Font from 'expo-font';
-import { View, StatusBar } from 'react-native';
+import { SafeAreaView, StatusBar, Platform } from 'react-native';
 import Routes from './Routes';
 
 export default function App() {
@@ -19,12 +19,12 @@ export default function App() {
 
   return (
     !loading ?
-      <View style={{
+      <SafeAreaView style={{
         flex: 1,
-        paddingTop: StatusBar.currentHeight
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
       }}>
         <Routes />
-      </View>
+      </SafeAreaView>
       : null
   );
 }

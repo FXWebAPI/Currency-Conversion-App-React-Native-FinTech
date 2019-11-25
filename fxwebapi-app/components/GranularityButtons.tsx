@@ -5,7 +5,7 @@ import { BaseChartData } from '../ws';
 
 interface GranularityButtonsProps {
   values: ReadonlyArray<{label: string, value: BaseChartData['granularity']}>
-  activeValue: string;
+  activeValue: BaseChartData['granularity'];
   onPress: (value: BaseChartData['granularity']) => void;
 }
 

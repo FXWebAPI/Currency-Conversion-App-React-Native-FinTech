@@ -6,20 +6,34 @@ import { NavigationStackScreenProps } from 'react-navigation-stack';
 import Chart from '../chart/Chart';
 import { ws, BaseChartData } from '../ws';
 import { GranularityButtons } from '../components/GranularityButtons';
+import { UICurrencyPicker } from '../components/CurrencyPicker';
 
 interface FXChartScreenProps extends NavigationStackScreenProps { };
 
 const GRANULARITY_VALUES = [
-  {label: '1H', value: 'M1'},
-  {label: '1D', value: 'H1'},
-  {label: '1W', value: 'D'},
-  {label: '1M', value: 'W'},
-  {label: '1Y', value: 'M'},
+  { label: '1H', value: 'M1' },
+  { label: '1D', value: 'H1' },
+  { label: '1W', value: 'D' },
+  { label: '1M', value: 'W' },
+  { label: '1Y', value: 'M' },
+] as const;
+
+const CURRENCY_PAIRS = [
+  { label: 'EUR USD', value: 'EUR/USD' },
+  { label: 'EUR GBP', value: 'EUR/GBP' },
+  { label: 'GBP USD', value: 'GBP/USD' },
+  // { label: 'GBP EUR', value: 'GBP/EUR' },
+  // { label: 'USD GBP', value: 'USD/GBP' },
+  // { label: 'USD EUR', value: 'USD/EUR' },
 ] as const;
 
 export default function FXChartScreen(props: FXChartScreenProps) {
-  const [ chartArgs, setChartArgs ] = useState<BaseChartData>({currencyPair: 'EUR/USD', granularity: GRANULARITY_VALUES[0].value})
-  const [ data, setData ] = useState([]);
+  const [chartArgs, setChartArgs] = useState<BaseChartData>({
+    currencyPair: CURRENCY_PAIRS[0].value,
+    granularity: GRANULARITY_VALUES[0].value
+  });
+
+  const [data, setData] = useState([]);
 
   const getData = (ev: MessageEvent) => {
     console.log('msg');
@@ -59,7 +73,7 @@ export default function FXChartScreen(props: FXChartScreenProps) {
         }}>FX chart</Text>
       </View>
 
-      <View style={{
+      {/* <View style={{
         paddingVertical: 23,
         flexDirection: 'row',
         alignItems: 'center',
@@ -69,16 +83,31 @@ export default function FXChartScreen(props: FXChartScreenProps) {
         <Text style={{
           ...text.bigTitle,
         }}>EUR USD</Text>
+      </View> */}
+      <View style={{
+        paddingVertical: 23,
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignContent: 'center',
+        justifyContent: 'space-around'
+      }}>
+        <UICurrencyPicker
+          values={CURRENCY_PAIRS}
+          activeValue={chartArgs.currencyPair}
+          onValueChange={(itemValue, _) => {
+            setChartArgs({ ...chartArgs, currencyPair: itemValue })
+          }}
+        />
       </View>
 
       <Chart style={{
         flex: 1,
         alignSelf: 'stretch',
-      }} chartScript='lineGraph' data={data}/>
-      <GranularityButtons 
+      }} chartScript='lineGraph' data={data} />
+      <GranularityButtons
         values={GRANULARITY_VALUES}
         activeValue={chartArgs.granularity}
-        onPress={(value) => setChartArgs({...chartArgs, granularity: value})}
+        onPress={(value) => setChartArgs({ ...chartArgs, granularity: value })}
       />
       <View style={{
         paddingTop: 112,
