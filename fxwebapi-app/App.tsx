@@ -10,6 +10,7 @@ export default function App() {
     const loadAssets = async () => {
       await Font.loadAsync({
         'Pangram': require('./assets/fonts/Pangram-Regular.otf'),
+        'CustomIcons': require('./assets/fonts/icomoon.ttf')
       });
       setLoading(false);
     };

@@ -2,8 +2,8 @@ import React from 'react';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { MaterialIcons } from '@expo/vector-icons';
 import { LoginScreen, DashboardScreen, FXChartScreen } from './screens';
+import Icon from './components/Icon';
 
 const AuthStack = createStackNavigator({
   Login: LoginScreen,
@@ -34,7 +34,7 @@ const AppTabs = createBottomTabNavigator({
     screen: DashboardStack,
     navigationOptions: {
       tabBarIcon: ({ focused, tintColor }) => {
-        return <MaterialIcons name='home' size={24} color={tintColor} />
+        return <Icon name='dashboard_icon' size={24} color={tintColor} />
       },
     }
   },
@@ -42,7 +42,7 @@ const AppTabs = createBottomTabNavigator({
     screen: LoginScreen,
     navigationOptions: {
       tabBarIcon: ({ focused, tintColor }) => {
-        return <MaterialIcons name='home' size={24} color={tintColor} />
+        return <Icon name='contrast' size={24} color={tintColor} />
       },
     }
   },
@@ -50,7 +50,7 @@ const AppTabs = createBottomTabNavigator({
     screen: DashboardScreen,
     navigationOptions: {
       tabBarIcon: ({ focused, tintColor }) => {
-        return <MaterialIcons name='swap-horiz' size={24} color={tintColor} />
+        return <Icon name='order_icon' size={24} color={tintColor} />
       },
     }
   },
@@ -58,7 +58,7 @@ const AppTabs = createBottomTabNavigator({
     screen: DashboardScreen,
     navigationOptions: {
       tabBarIcon: ({ focused, tintColor }) => {
-        return <MaterialIcons name='receipt' size={24} color={tintColor} />
+        return <Icon name='blotter_icon' size={24} color={tintColor} />
       },
     }
   }
