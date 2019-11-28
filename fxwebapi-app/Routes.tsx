@@ -5,6 +5,8 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LoginScreen, DashboardScreen, FXChartScreen } from './screens';
 
+import SpotIcon from './assets/icons/spot_icon.svg';
+
 const AuthStack = createStackNavigator({
   Login: LoginScreen,
 }, {
@@ -42,7 +44,7 @@ const AppTabs = createBottomTabNavigator({
     screen: LoginScreen,
     navigationOptions: {
       tabBarIcon: ({ focused, tintColor }) => {
-        return <MaterialIcons name='tonality' size={24} color={tintColor} />
+        return <SpotIcon width={24} height={24} color={tintColor} fill={tintColor} stroke={tintColor} />
       },
     }
   },
