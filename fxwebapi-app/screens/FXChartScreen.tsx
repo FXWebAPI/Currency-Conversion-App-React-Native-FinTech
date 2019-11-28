@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { text, colors } from '../styles';
-import { MaterialIcons } from '@expo/vector-icons';
 import { NavigationStackScreenProps } from 'react-navigation-stack';
 import Chart from '../chart/Chart';
 import { ws, BaseChartData } from '../ws';
 import { GranularityButtons } from '../components/GranularityButtons';
 import { UICurrencyPicker } from '../components/CurrencyPicker';
+import Icon from '../components/Icon';
+import { MaterialIcons } from '@expo/vector-icons';
 
 interface FXChartScreenProps extends NavigationStackScreenProps { };
 type chartTypes = 'lineGraph' | 'candleChart';
@@ -88,17 +89,6 @@ export default function FXChartScreen(props: FXChartScreenProps) {
         }}>FX chart</Text>
       </View>
 
-      {/* <View style={{
-        paddingVertical: 23,
-        flexDirection: 'row',
-        alignItems: 'center',
-        alignContent: 'center',
-        justifyContent: 'space-around'
-      }}>
-        <Text style={{
-          ...text.bigTitle,
-        }}>EUR USD</Text>
-      </View> */}
       <View style={{
         paddingVertical: 23,
         flexDirection: 'row',
@@ -135,14 +125,14 @@ export default function FXChartScreen(props: FXChartScreenProps) {
         <TouchableOpacity style={{
           padding: 12
         }} onPress={() => setChartType(CHART_TYPES[0])}>
-          <MaterialIcons name='show-chart' size={24}
+          <Icon name='linechart_icon' size={24}
             color={chartType === CHART_TYPES[0] ? colors.btnPrimary : colors.textPrimary}
           />
         </TouchableOpacity>
         <TouchableOpacity style={{
           padding: 12
         }} onPress={() => setChartType(CHART_TYPES[1])}>
-          <MaterialIcons name='insert-chart' size={24}
+          <Icon name='candlechart_icon' size={24}
             color={chartType === CHART_TYPES[1] ? colors.btnPrimary : colors.textPrimary}
           />
         </TouchableOpacity>
