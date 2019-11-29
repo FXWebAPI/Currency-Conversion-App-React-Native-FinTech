@@ -11,7 +11,7 @@ export interface BaseChartData {
 export const ws = (() => {
   const ws = new WebSocket(WS_ADDR);
   ws.onopen = () => console.log('socket opened.');
-  ws.onerror = (error) => console.error('Websocket error observed:', event);
+  ws.onerror = (event: ErrorEvent) => console.error('Websocket error observed:', event.message);
 
   return {
     onMessage(handler: (this: WebSocket, ev: MessageEvent) => void) {

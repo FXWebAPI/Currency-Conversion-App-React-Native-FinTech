@@ -2,7 +2,7 @@ import React from 'react';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { LoginScreen, DashboardScreen, FXChartScreen } from './screens';
+import { LoginScreen, DashboardScreen, FXChartScreen, FXSpotScreen } from './screens';
 import Icon from './components/Icon';
 
 const AuthStack = createStackNavigator({
@@ -39,7 +39,7 @@ const AppTabs = createBottomTabNavigator({
     }
   },
   Spot: {
-    screen: LoginScreen,
+    screen: FXSpotScreen,
     navigationOptions: {
       tabBarIcon: ({ focused, tintColor }) => {
         return <Icon name='contrast' size={24} color={tintColor} />
