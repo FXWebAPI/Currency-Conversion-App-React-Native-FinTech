@@ -37,7 +37,7 @@ const CurrencyInput = (props: CurrencyInputProps) => {
           fontSize: 40,
           fontFamily: 'Pangram',
           color: colors.textPrimary,
-          backgroundColor: focused ? 'rgba(20, 106, 255, .1)' : '#E5E8EB',
+          backgroundColor: focused ? colors.inputFocused : '#E5E8EB',
           flex: 1,
           padding: 16,
           alignSelf: 'stretch',
