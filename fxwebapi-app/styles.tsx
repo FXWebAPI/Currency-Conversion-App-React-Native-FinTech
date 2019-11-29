@@ -16,6 +16,11 @@ const colors = {
 }
 
 const text = StyleSheet.create({
+  regular: {
+    fontFamily: 'Roboto',
+    fontSize: 16,
+    color: colors.textPrimary
+  },
   h1: {
     fontFamily: 'Pangram',
     fontSize: 23,
