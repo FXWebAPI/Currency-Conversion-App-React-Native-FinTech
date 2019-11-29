@@ -1,12 +1,13 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { text, colors } from '../styles';
 
 interface TransactionItemProps {
   currencies: string,
   date: string | Date,
   amount: string | number,
-  focused?: boolean
+  focused?: boolean,
+  onPress?: Function
 }
 
 const TransactionItem = (props: TransactionItemProps) => {
@@ -14,14 +15,14 @@ const TransactionItem = (props: TransactionItemProps) => {
   const amount = parseFloat(props.amount + '').toFixed(2);
 
   return (
-    <View style={{
+    <TouchableOpacity style={{
       padding: 16,
       flex: 0,
       flexDirection: 'row',
       backgroundColor: props.focused ? '#F5F5F5' : '#FFF',
       justifyContent: 'space-between',
       alignItems: 'stretch'
-    }}>
+    }} onPress={() => props.onPress()}>
       <View style={{
         flexDirection: 'column'
       }}>
@@ -40,7 +41,7 @@ const TransactionItem = (props: TransactionItemProps) => {
         }}>{props.date}</Text>
       </View>
       <Text style={{...text.regular, alignSelf: 'flex-start'}}>{cur1} {amount}</Text>
-    </View>
+    </TouchableOpacity>
   );
 }
 

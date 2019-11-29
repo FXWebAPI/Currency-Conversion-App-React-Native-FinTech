@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavigationStackScreenProps } from "react-navigation-stack";
 import { View, Text } from "react-native";
 import { text, colors } from '../styles';
@@ -10,7 +10,51 @@ import { TransactionItem } from '../components/TransactionItem';
 
 interface FXSpotScreenProps extends NavigationStackScreenProps { };
 
+const MOCK_TRANSACTIONS = [
+  {
+    currencies: 'EUR USD',
+    date: '07.10.2019 | 16:00',
+    amount: 250
+  },
+  {
+    currencies: 'EUR GBP',
+    date: '13.12.2019 | 15:00',
+    amount: 340.5
+  },
+  {
+    currencies: 'USD EUR',
+    date: '22.12.2019 | 09:00',
+    amount: 250
+  },
+  {
+    currencies: 'USD EUR',
+    date: '22.12.2019 | 09:00',
+    amount: 250
+  },
+  {
+    currencies: 'USD EUR',
+    date: '22.12.2019 | 09:00',
+    amount: 250
+  },
+  {
+    currencies: 'USD EUR',
+    date: '22.12.2019 | 09:00',
+    amount: 250
+  },
+  {
+    currencies: 'USD EUR',
+    date: '22.12.2019 | 09:00',
+    amount: 250
+  },
+  {
+    currencies: 'USD EUR',
+    date: '22.12.2019 | 09:00',
+    amount: 250
+  },
+];
+
 export default function FXSpotScreen(props: FXSpotScreenProps) {
+  const [focusedTrans, setFocusedTrans] = useState(0);
 
   return (
     <View style={{
@@ -52,14 +96,14 @@ export default function FXSpotScreen(props: FXSpotScreenProps) {
       </View>
 
       <FilterList title='Last transactions' items={
-        [
-          <TransactionItem currencies='EUR USD' date='07.10.2019 | 16:00' amount='250' focused key={0}  />,
-          <TransactionItem currencies='EUR GBP' date='13.12.2019 | 15:00' amount='340,5' key={1} />,
-          <TransactionItem currencies='USD EUR' date='22.12.2019 | 09:00' amount='250' key={2} />,
-          <TransactionItem currencies='USD EUR' date='22.12.2019 | 09:00' amount='250' key={3} />,
-          <TransactionItem currencies='USD EUR' date='22.12.2019 | 09:00' amount='250' key={4} />,
-
-        ]
+        MOCK_TRANSACTIONS.map((trans, i) =>
+          <TransactionItem
+            {...trans}
+            key={i}
+            focused={focusedTrans === i}
+            onPress={() => setFocusedTrans(i)}
+          />
+        )
       } />
     </View>
   );
