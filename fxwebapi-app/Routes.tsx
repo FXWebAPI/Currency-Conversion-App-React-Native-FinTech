@@ -2,7 +2,7 @@ import React from 'react';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { LoginScreen, DashboardScreen, FXChartScreen, FXSpotScreen, NewTransactionScreen, ReceiptScreen } from './screens';
+import { LoginScreen, DashboardScreen, FXChartScreen, FXSpotScreen, NewTransactionScreen, ReceiptScreen, FXOrderScreen } from './screens';
 import Icon from './components/Icon';
 
 const AuthStack = createStackNavigator({
@@ -48,6 +48,25 @@ FXSpotStack.navigationOptions = ({ navigation }) => {
   };
 };
 
+const FXOrderStack = createStackNavigator({
+  Spot: FXOrderScreen,
+  Transaction: NewTransactionScreen,
+  Receipt: ReceiptScreen
+}, {
+  defaultNavigationOptions: { header: null },
+  initialRouteName: 'Spot'
+});
+FXOrderStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+
+  return {
+    tabBarVisible,
+  };
+};
+
 const AppTabs = createBottomTabNavigator({
   Dashboard: {
     screen: DashboardStack,
@@ -66,7 +85,7 @@ const AppTabs = createBottomTabNavigator({
     }
   },
   Order: {
-    screen: DashboardScreen,
+    screen: FXOrderStack,
     navigationOptions: {
       tabBarIcon: ({ focused, tintColor }) => {
         return <Icon name='order_icon' size={24} color={tintColor} />

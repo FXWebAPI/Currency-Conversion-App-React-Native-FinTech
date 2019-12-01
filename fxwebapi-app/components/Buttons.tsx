@@ -1,6 +1,6 @@
 import React from 'react';
-import { TouchableOpacity, Text, GestureResponderEvent } from 'react-native';
-import { buttons, buttonText } from '../styles';
+import { TouchableOpacity, Text, GestureResponderEvent, View } from 'react-native';
+import { buttons, buttonText, text, colors } from '../styles';
 import { MaterialIcons } from '@expo/vector-icons';
 
 interface UIBtnProps {
@@ -52,5 +52,58 @@ const UIAddRound = (props: UIAddRoundProps) => (
   </TouchableOpacity>
 );
 
+interface UIBtnToggleProps {
+  left: string;
+  right: string;
+  selected: boolean;
+  onPress: (selected: boolean) => void;
+}
 
-export { UIBtn, UIAddRound };
+const UIBtnToggleStyles = [
+  {
+    backgroundColor: colors.btnPrimary,
+    color: colors.btnText,
+    borderWidth: 1,
+    borderColor: colors.btnPrimary,
+  },
+  {
+    backgroundColor: colors.btnText,
+    borderColor: colors.btnPrimary,
+    borderWidth: 1,
+    color: colors.btnPrimary
+  }
+];
+
+const UIBtnToggle = (props: UIBtnToggleProps) => (
+  <View style={{
+    flex: 0,
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    padding: 16
+  }}>
+    <TouchableOpacity onPress={() => props.onPress(true)}>
+      <Text style={{
+        ...text.p,
+        paddingHorizontal: 15,
+        paddingVertical: 8,
+        borderTopLeftRadius: 4,
+        borderBottomLeftRadius: 4,
+        ...(props.selected ? UIBtnToggleStyles[0] : UIBtnToggleStyles[1])
+      }}>{props.left}</Text>
+    </TouchableOpacity>
+    <TouchableOpacity onPress={() => props.onPress(false)}>
+      <Text style={{
+        ...text.p,
+        paddingHorizontal: 15,
+        paddingVertical: 8,
+        borderTopRightRadius: 4,
+        borderBottomRightRadius: 4,
+        ...(props.selected ? UIBtnToggleStyles[1] : UIBtnToggleStyles[0])
+      }}>{props.right}</Text>
+    </TouchableOpacity>
+  </View>
+);
+
+export { UIBtn, UIAddRound, UIBtnToggle, UIBtnToggleProps };

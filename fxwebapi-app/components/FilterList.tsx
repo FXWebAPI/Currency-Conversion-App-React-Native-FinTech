@@ -1,22 +1,25 @@
 import React from 'react';
-import { ScrollView, View, TouchableOpacity, Text } from "react-native"
+import { ScrollView, View, TouchableOpacity, Text, StyleProp, ViewStyle } from "react-native"
 import Icon from './Icon';
 import { colors, text } from '../styles';
+import { UIBtnToggleProps, UIBtnToggle } from './Buttons';
 
 interface FilterListProps {
-  title: string,
-  items: Array<JSX.Element>,
-  onFilterClick?: () => void
+  title: string;
+  items: Array<JSX.Element>;
+  onFilterClick?: () => void;
+  style?: StyleProp<ViewStyle>;
+  toggle?: UIBtnToggleProps
 };
 
 const FilterList = (props: FilterListProps) => {
 
   return (
-    <View style={{
+    <View style={[{
       flex: 1,
       alignSelf: 'stretch',
       backgroundColor: '#FFF',
-    }}>
+    }, props.style]}>
 
       <View style={{
         padding: 16,
@@ -36,7 +39,7 @@ const FilterList = (props: FilterListProps) => {
           <Icon name='filter_list_icon' size={24} color={colors.darkIcons} />
         </TouchableOpacity>
       </View>
-
+      {props.toggle ? <UIBtnToggle {...props.toggle} /> : null}
       <ScrollView style={{
         flex: 1,
         flexDirection: 'column',
