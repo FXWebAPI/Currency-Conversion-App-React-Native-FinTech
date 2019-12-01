@@ -37,6 +37,11 @@ const SYMBOL_TABLE = {
   'USD': '$'
 };
 
+const ACCOUNTS_MOCK = [
+  {label: 'To Euro Account', value: 'EUR – 7464 8733 8375 5232'},
+  {label: 'To USD Account', value: 'USD – 7464 8733 8375 5232'},
+];
+
 
 export default function NewTransactionScreen(props: NewTransactionScreenProps) {
   const [currencyPair, setCurrencyPair] = useState(CURRENCY_PAIRS[0].value);
@@ -138,7 +143,7 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
       </View>
 
       <View style={{
-        padding: 16
+        paddingHorizontal: 16
       }}>
         <CurrencyInput
           type={!buy ? 'Buy' : 'Sell'}
@@ -159,6 +164,31 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
         <DatePicker date={expireDate} onChange={(d) => setExpireDate(d)} />
       </View>
 
+      <View style={{
+        paddingHorizontal: 16,
+        position: 'relative',
+      }}>
+        <Dropdown 
+          activeValue={ACCOUNTS_MOCK[0].value}
+          values={ACCOUNTS_MOCK}
+          onValueChange={(value, index) => setCurrencyAction(value)}
+          containerStyle={{
+            borderBottomColor: '#BBBBBB',
+            borderBottomWidth: 1,
+            flex: 0,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingHorizontal: 12
+          }}
+          style={{
+            paddingVertical: 18,
+            ...text.regular
+          }}
+          textItemStyle={{
+            padding: 10
+          }}
+        />
+      </View>
     </View>
   );
 }

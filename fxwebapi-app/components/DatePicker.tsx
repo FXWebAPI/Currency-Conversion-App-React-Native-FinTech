@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { StyleProp, ViewStyle, View, Text, TouchableOpacity } from 'react-native';
 import Icon from './Icon';
-import { colors } from '../styles';
+import { colors, text } from '../styles';
 
 interface DatePickerProps {
   date?: Date;
@@ -30,7 +30,9 @@ function DatePicker(props: DatePickerProps) {
       , props.style]}
       onPress={() => setShow(true)}
     >
-      <Text>{!props.date ? props.text || 'Expire' : props.date.toISOString().split('T')[0]}</Text>
+      <Text style={{
+        ...text.regular
+      }}>{!props.date ? props.text || 'Expire' : props.date.toISOString().split('T')[0]}</Text>
       <Icon name='callendar_icon' size={24} color={colors.inactiveIcons} />
       <DateTimePicker
         date={props.date || new Date()}
