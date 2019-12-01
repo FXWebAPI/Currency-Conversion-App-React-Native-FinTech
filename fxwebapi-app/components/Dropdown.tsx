@@ -6,8 +6,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 interface DropdownProps {
   activeValue: string;
   values: Array<{ label: string, value: string }> | ReadonlyArray<{ label: string, value: string }>;
-  onValueChange: Function;
+  onValueChange: (value: string, index: number) => void;
   style?: StyleProp<TextStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
   itemStyle?: StyleProp<ViewStyle>;
   textItemStyle?: StyleProp<TextStyle>;
   itemContainerStyle?: StyleProp<ViewStyle>;
@@ -20,12 +21,12 @@ function Dropdown(props: DropdownProps) {
   return (
     <>
       <TouchableOpacity
-        style={{
+        style={[{
           flex: 0,
           alignContent: 'center',
           alignItems: 'center',
           flexDirection: 'row'
-        }}
+        }, props.containerStyle]}
         onPress={() => setDisplayOptions(!displayOptions)}
       >
         <Text style={props.style}>{activeLabel}</Text>

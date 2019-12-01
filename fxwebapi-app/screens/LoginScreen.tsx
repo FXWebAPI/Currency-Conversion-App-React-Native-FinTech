@@ -6,7 +6,6 @@ import { UIInput } from '../components/Inputs';
 import { UIFlagPicker } from '../components/FlagPicker';
 import { text, colors } from '../styles';
 import { NavigationSwitchScreenProps } from 'react-navigation';
-import { CurrencyInput } from '../components/CurrencyInput';
 
 const languages = [
   { value: 'en', label: 'EN', image: '../images/flags/united-kingdom.png' },
@@ -26,11 +25,8 @@ export default function LoginScreen(props: LoginScreenProps) {
   const [agreeTOS, setAgreeTOS] = useState(true);
   const [language, setLanguage] = useState({ value: 'en', pos: 0 });
 
-  const [value, setValue] = useState('');
   return (
     <View style={styles.container}>
-
-      <CurrencyInput type='Buy' value={value} onChange={(text, rawText) => setValue(text)} currencySymbol='€' />
 
       <UIFlagPicker
         onValueChange={(value, pos) => setLanguage({ value, pos })}

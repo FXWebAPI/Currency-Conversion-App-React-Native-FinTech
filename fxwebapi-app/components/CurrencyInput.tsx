@@ -7,7 +7,7 @@ interface CurrencyInputProps {
   type: string;
   currencySymbol: '€' | '$' | '£';
   value: string;
-  onChange?: Function;
+  onChange: (text: string, rawText: string) => any;
 }
 
 const CurrencyInput = (props: CurrencyInputProps) => {

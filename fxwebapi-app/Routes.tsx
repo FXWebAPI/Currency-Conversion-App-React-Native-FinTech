@@ -2,7 +2,7 @@ import React from 'react';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { LoginScreen, DashboardScreen, FXChartScreen, FXSpotScreen } from './screens';
+import { LoginScreen, DashboardScreen, FXChartScreen, FXSpotScreen, NewTransactionScreen } from './screens';
 import Icon from './components/Icon';
 
 const AuthStack = createStackNavigator({
@@ -29,6 +29,24 @@ DashboardStack.navigationOptions = ({ navigation }) => {
   };
 };
 
+const FXSpotStack = createStackNavigator({
+  Spot: FXSpotScreen,
+  Transaction: NewTransactionScreen
+}, {
+  defaultNavigationOptions: { header: null },
+  initialRouteName: 'Spot'
+});
+FXSpotStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+
+  return {
+    tabBarVisible,
+  };
+};
+
 const AppTabs = createBottomTabNavigator({
   Dashboard: {
     screen: DashboardStack,
@@ -39,7 +57,7 @@ const AppTabs = createBottomTabNavigator({
     }
   },
   Spot: {
-    screen: FXSpotScreen,
+    screen: FXSpotStack,
     navigationOptions: {
       tabBarIcon: ({ focused, tintColor }) => {
         return <Icon name='contrast' size={24} color={tintColor} />

@@ -87,7 +87,9 @@ export default function FXSpotScreen(props: FXSpotScreenProps) {
         paddingTop: 32,
         paddingBottom: 40,
       }}>
-        <UIAddRound size={48} fill={colors.btnPrimary} color={colors.btnText} />
+        <UIAddRound size={48} fill={colors.btnPrimary} color={colors.btnText} onPress={
+          () => props.navigation.push('Transaction')
+        } />
         <Text style={{
           ...text.p,
           fontSize: 16,
