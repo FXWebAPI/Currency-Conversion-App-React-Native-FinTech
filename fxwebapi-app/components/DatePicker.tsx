@@ -42,6 +42,7 @@ function DatePicker(props: DatePickerProps) {
           props.onChange(d);
           setShow(false);
         }}
+        minimumDate={new Date()}
       />
     </TouchableOpacity>
   );

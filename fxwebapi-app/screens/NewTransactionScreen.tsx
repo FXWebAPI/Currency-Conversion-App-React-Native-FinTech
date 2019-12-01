@@ -39,8 +39,8 @@ const SYMBOL_TABLE = {
 };
 
 const ACCOUNTS_MOCK = [
-  {label: 'To Euro Account', value: 'EUR'},
-  {label: 'To USD Account', value: 'USD'},
+  { label: 'To Euro Account', value: 'EUR' },
+  { label: 'To USD Account', value: 'USD' },
 ];
 
 
@@ -49,10 +49,14 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
   const [currencyAction, setCurrencyAction] = useState(CURRENCY_ACTIONS[currencyPair][0].value);
   const [buyVal, setBuyVal] = useState('');
   const [sellVal, setSellVal] = useState('');
+  const [buyValRaw, setBuyValRaw] = useState('');
   const [expireDate, setExpireDate] = useState(null);
   const [accountType, setAccountType] = useState(ACCOUNTS_MOCK[0].value);
+  const [exchangeRate, setExchangeRate] = useState(null);
 
   const buy = currencyAction === currencyPair;
+  // TODO: also check if selected cur pair & action
+  const quoteEnabled = buyVal !== '' && expireDate;
   const [cur1, cur2] = currencyAction.split('/');
 
   return (
@@ -139,10 +143,33 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
           onChange={
             (text, rawText) => {
               setBuyVal(text);
+              setBuyValRaw(rawText);
             }
           }
         />
       </View>
+
+      {exchangeRate ?
+        <View style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          paddingHorizontal: 28,
+          paddingBottom: 16
+        }}>
+          <Text style={{
+            color: colors.btnPrimary,
+            fontSize: 16,
+            fontFamily: 'Roboto'
+          }}>I {buy ? 'Buy' : 'Sell'} {cur1} at</Text>
+          <Text style={{
+            color: colors.btnPrimary,
+            fontSize: 34,
+            fontFamily: 'Pangram'
+          }}>{exchangeRate}</Text>
+        </View>
+
+        : null}
 
       <View style={{
         paddingHorizontal: 16
@@ -154,6 +181,7 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
           onChange={
             (text, rawText) => {
               setSellVal(text);
+              setBuyValRaw(rawText);
             }
           }
           disabled
@@ -167,7 +195,7 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
       </View>
 
       <View>
-        <Dropdown 
+        <Dropdown
           activeValue={accountType}
           values={ACCOUNTS_MOCK}
           onValueChange={(value, index) => setAccountType(value)}
@@ -200,15 +228,37 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
         flexDirection: 'row',
         alignContent: 'center',
         alignItems: 'center',
+        justifyContent: 'space-evenly',
         ...shadow.base,
         marginTop: 4
       }}>
-        <UIBtn title='Get quote' size='lg' type='primary' disabled style={{
+        {!exchangeRate ? <UIBtn title='Get quote' size='lg' type='primary' disabled={!quoteEnabled} style={{
           flex: 1,
           margin: 16,
           alignSelf: 'stretch',
           width: 'auto'
-        }} />
+        }} onPress={() => {
+          // get exchange rate from api
+          const exrate = 1.13967;
+          const bvr = parseFloat(buyValRaw);
+          const calcVal = (buy ? (bvr * exrate) : (bvr / exrate)).toFixed(2);
+          setExchangeRate(exrate);
+          setSellVal(calcVal + '');
+        }} /> :
+          <>
+            <UIBtn type='secondary' title='Cancel 45s' size='lg' style={{
+              margin: 16,
+              marginRight: 8
+            }} onPress={() => setExchangeRate('')}/>
+            <UIBtn type='primary' title='Buy EUR' size='lg' style={{
+              margin: 16,
+              marginLeft: 8
+            }} onPress={() => {
+              // perform buy action
+              // navigate to receipt page
+            }} />
+          </>
+        }
       </View>
     </View>
   );

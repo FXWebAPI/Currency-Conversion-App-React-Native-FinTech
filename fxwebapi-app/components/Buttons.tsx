@@ -16,10 +16,10 @@ const UIBtn = (props: UIBtnProps) => {
   return (
     <TouchableOpacity style={[
       buttons.base,
-      buttons[props.type],
+      buttons[props.disabled ? 'disabled' : props.type],
       buttons[props.size],
       props.style
-    ]} onPress={props.onPress}>
+    ]} onPress={props.disabled ? null : props.onPress}>
       <Text style={[buttonText[props.type], buttonText[props.size]]}>{props.title}</Text>
     </TouchableOpacity>
   )
