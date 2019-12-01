@@ -43,10 +43,10 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
   const [currencyAction, setCurrencyAction] = useState(CURRENCY_ACTIONS[currencyPair][0].value);
   const [buyVal, setBuyVal] = useState('');
   const [sellVal, setSellVal] = useState('');
-  const [ expireDate, setExpireDate ] = useState(null);
+  const [expireDate, setExpireDate] = useState(null);
 
   const buy = currencyAction === currencyPair;
-  const [ cur1, cur2 ] = currencyAction.split('/');
+  const [cur1, cur2] = currencyAction.split('/');
 
   return (
     <View style={styles.container}>
@@ -153,7 +153,11 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
         />
       </View>
 
-      <DatePicker date={expireDate} onChange={(e, d) => setExpireDate(d)} />
+      <View style={{
+        padding: 16
+      }}>
+        <DatePicker date={expireDate} onChange={(d) => setExpireDate(d)} />
+      </View>
 
     </View>
   );
