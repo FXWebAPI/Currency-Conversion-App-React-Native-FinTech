@@ -249,13 +249,28 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
             <UIBtn type='secondary' title='Cancel 45s' size='lg' style={{
               margin: 16,
               marginRight: 8
-            }} onPress={() => setExchangeRate('')}/>
+            }} onPress={() => setExchangeRate('')} />
             <UIBtn type='primary' title='Buy EUR' size='lg' style={{
               margin: 16,
               marginLeft: 8
             }} onPress={() => {
               // perform buy action
               // navigate to receipt page
+              props.navigation.push('Receipt', {
+                data: {
+                  'ID': '29656020',
+                  'Company Code': 'Synnetra',
+                  'Settlement Date': '16.12.2019',
+                  'Action': 'Buy EUR / Sell USD',
+                  'Currency Pair': 'EUR USD',
+                  'Notional amount': '250,00',
+                  'Opposite amount': '281,01',
+                  'Quote': '1.13967',
+                  'User ID': 'John Doe',
+                  'Execution Time Stamp': '16.12.2019 | 06:20:19',
+                },
+                buttonText: 'New transaction'
+              });
             }} />
           </>
         }
