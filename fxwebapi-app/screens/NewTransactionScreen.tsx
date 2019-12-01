@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { text, colors } from '../styles';
+import { text, colors, shadow } from '../styles';
 import { NavigationStackScreenProps } from 'react-navigation-stack';
 import Icon from '../components/Icon';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Dropdown } from '../components/Dropdown';
 import { CurrencyInput } from '../components/CurrencyInput';
 import { DatePicker } from '../components/DatePicker';
+import { UIBtn } from '../components/Buttons';
 
 interface NewTransactionScreenProps extends NavigationStackScreenProps { };
 
@@ -38,8 +39,8 @@ const SYMBOL_TABLE = {
 };
 
 const ACCOUNTS_MOCK = [
-  {label: 'To Euro Account', value: 'EUR – 7464 8733 8375 5232'},
-  {label: 'To USD Account', value: 'USD – 7464 8733 8375 5232'},
+  {label: 'To Euro Account', value: 'EUR'},
+  {label: 'To USD Account', value: 'USD'},
 ];
 
 
@@ -49,6 +50,7 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
   const [buyVal, setBuyVal] = useState('');
   const [sellVal, setSellVal] = useState('');
   const [expireDate, setExpireDate] = useState(null);
+  const [accountType, setAccountType] = useState(ACCOUNTS_MOCK[0].value);
 
   const buy = currencyAction === currencyPair;
   const [cur1, cur2] = currencyAction.split('/');
@@ -164,21 +166,19 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
         <DatePicker date={expireDate} onChange={(d) => setExpireDate(d)} />
       </View>
 
-      <View style={{
-        paddingHorizontal: 16,
-        position: 'relative',
-      }}>
+      <View>
         <Dropdown 
-          activeValue={ACCOUNTS_MOCK[0].value}
+          activeValue={accountType}
           values={ACCOUNTS_MOCK}
-          onValueChange={(value, index) => setCurrencyAction(value)}
+          onValueChange={(value, index) => setAccountType(value)}
           containerStyle={{
             borderBottomColor: '#BBBBBB',
             borderBottomWidth: 1,
-            flex: 0,
             flexDirection: 'row',
             justifyContent: 'space-between',
-            paddingHorizontal: 12
+            position: 'relative',
+            paddingHorizontal: 12,
+            marginHorizontal: 16
           }}
           style={{
             paddingVertical: 18,
@@ -188,6 +188,27 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
             padding: 10
           }}
         />
+      </View>
+
+      <View style={{
+        position: 'absolute',
+        bottom: 0,
+        height: 80,
+        width: '100%',
+        backgroundColor: 'white',
+        flex: 0,
+        flexDirection: 'row',
+        alignContent: 'center',
+        alignItems: 'center',
+        ...shadow.base,
+        marginTop: 4
+      }}>
+        <UIBtn title='Get quote' size='lg' type='primary' disabled style={{
+          flex: 1,
+          margin: 16,
+          alignSelf: 'stretch',
+          width: 'auto'
+        }} />
       </View>
     </View>
   );

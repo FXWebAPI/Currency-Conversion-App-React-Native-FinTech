@@ -177,4 +177,17 @@ const dashboardCard = StyleSheet.create({
   }
 });
 
-export { buttons, buttonText, colors, input, text, dashboardCard };
+const shadow = StyleSheet.create({
+  base: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
+    shadowOpacity: 0.30,
+    shadowRadius: 4.65,
+    elevation: 8,
+  }
+})
+
+export { buttons, buttonText, colors, input, text, dashboardCard, shadow };
