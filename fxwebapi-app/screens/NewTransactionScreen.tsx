@@ -4,7 +4,7 @@ import { text, colors, shadow } from '../styles';
 import { NavigationStackScreenProps } from 'react-navigation-stack';
 import Icon from '../components/Icon';
 import { MaterialIcons } from '@expo/vector-icons';
-import { Dropdown } from '../components/Dropdown';
+import { Dropdown, UIDropdown } from '../components/Dropdown';
 import { CurrencyInput } from '../components/CurrencyInput';
 import { DatePicker } from '../components/DatePicker';
 import { UIBtn } from '../components/Buttons';
@@ -83,52 +83,20 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
         paddingHorizontal: 16,
       }}>
         <View>
-          <Dropdown
+          <UIDropdown
             activeValue={currencyPair}
             values={CURRENCY_PAIRS}
             onValueChange={(value, index) => {
               setCurrencyPair(value);
               setCurrencyAction(CURRENCY_ACTIONS[value][0].value);
             }}
-            containerStyle={{
-              borderBottomColor: '#BBBBBB',
-              borderBottomWidth: 1,
-              flex: 0,
-              position: 'relative',
-              flexDirection: 'row',
-            }}
-            style={{
-              paddingVertical: 18,
-              paddingLeft: 12,
-              paddingRight: 48,
-              ...text.regular
-            }}
-            textItemStyle={{
-              padding: 10
-            }}
           />
         </View>
         <View>
-          <Dropdown
+          <UIDropdown
             activeValue={currencyAction}
             values={CURRENCY_ACTIONS[currencyPair]}
             onValueChange={(value, index) => setCurrencyAction(value)}
-            containerStyle={{
-              borderBottomColor: '#BBBBBB',
-              borderBottomWidth: 1,
-              flex: 0,
-              position: 'relative',
-              flexDirection: 'row',
-            }}
-            style={{
-              paddingVertical: 18,
-              paddingLeft: 12,
-              paddingRight: 28,
-              ...text.regular
-            }}
-            textItemStyle={{
-              padding: 10
-            }}
           />
         </View>
       </View>

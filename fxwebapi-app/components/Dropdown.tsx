@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { text } from '../styles';
 
 interface DropdownProps {
   activeValue: string;
@@ -68,4 +69,25 @@ function Dropdown(props: DropdownProps) {
   );
 };
 
-export { Dropdown };
+const UIDropdown = (props: DropdownProps) => (
+  <Dropdown
+    activeValue={props.activeValue}
+    values={props.values}
+    onValueChange={props.onValueChange}
+    containerStyle={{
+      borderBottomColor: '#BBBBBB',
+      borderBottomWidth: 1,
+      flex: 0,
+      position: 'relative',
+      flexDirection: 'row',
+    }}
+    style={{
+      paddingVertical: 18,
+      ...text.regular
+    }}
+    textItemStyle={{
+      padding: 10
+    }}
+  />
+)
+export { Dropdown, UIDropdown };
