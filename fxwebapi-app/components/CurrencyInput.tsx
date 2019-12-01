@@ -8,6 +8,7 @@ interface CurrencyInputProps {
   currencySymbol: '€' | '$' | '£';
   value: string;
   onChange: (text: string, rawText: string) => any;
+  disabled?: boolean;
 }
 
 const CurrencyInput = (props: CurrencyInputProps) => {
@@ -46,6 +47,7 @@ const CurrencyInput = (props: CurrencyInputProps) => {
         }}
         onBlur={() => setFocused(false)}
         onFocus={() => setFocused(true)}
+        editable={!props.disabled}
       />
       <Text style={{
         position: 'absolute',

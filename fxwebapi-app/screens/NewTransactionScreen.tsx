@@ -6,6 +6,7 @@ import Icon from '../components/Icon';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Dropdown } from '../components/Dropdown';
 import { CurrencyInput } from '../components/CurrencyInput';
+import { DatePicker } from '../components/DatePicker';
 
 interface NewTransactionScreenProps extends NavigationStackScreenProps { };
 
@@ -15,16 +16,37 @@ const CURRENCY_PAIRS = [
   { label: 'GBP USD', value: 'GBP/USD' },
 ];
 
-const CURRENCY_ACTIONS = [
-  { label: 'Buy EUR/Sell USD', value: 'Buy/Sell' },
-  { label: 'Sell EUR/Buy USD', value: 'Sell/Buy' },
-]
+const CURRENCY_ACTIONS = {
+  'EUR/USD': [
+    { label: 'Buy EUR/Sell USD', value: 'EUR/USD' },
+    { label: 'Sell EUR/Buy USD', value: 'USD/EUR' },
+  ],
+  'EUR/GBP': [
+    { label: 'Buy EUR/Sell GBP', value: 'EUR/GBP' },
+    { label: 'Sell EUR/Buy GBP', value: 'GBP/EUR' },
+  ],
+  'GBP/USD': [
+    { label: 'Buy GBP/Sell USD', value: 'GBP/USD' },
+    { label: 'Sell GBP/Buy USD', value: 'USD/GBP' },
+  ]
+};
+
+const SYMBOL_TABLE = {
+  'EUR': '€',
+  'GBP': '£',
+  'USD': '$'
+};
+
 
 export default function NewTransactionScreen(props: NewTransactionScreenProps) {
   const [currencyPair, setCurrencyPair] = useState(CURRENCY_PAIRS[0].value);
-  const [currencyAction, setCurrencyAction] = useState(CURRENCY_ACTIONS[0].value);
+  const [currencyAction, setCurrencyAction] = useState(CURRENCY_ACTIONS[currencyPair][0].value);
   const [buyVal, setBuyVal] = useState('');
   const [sellVal, setSellVal] = useState('');
+  const [ expireDate, setExpireDate ] = useState(null);
+
+  const buy = currencyAction === currencyPair;
+  const [ cur1, cur2 ] = currencyAction.split('/');
 
   return (
     <View style={styles.container}>
@@ -53,7 +75,10 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
           <Dropdown
             activeValue={currencyPair}
             values={CURRENCY_PAIRS}
-            onValueChange={(value, index) => setCurrencyPair(value)}
+            onValueChange={(value, index) => {
+              setCurrencyPair(value);
+              setCurrencyAction(CURRENCY_ACTIONS[value][0].value);
+            }}
             containerStyle={{
               borderBottomColor: '#BBBBBB',
               borderBottomWidth: 1,
@@ -75,7 +100,7 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
         <View>
           <Dropdown
             activeValue={currencyAction}
-            values={CURRENCY_ACTIONS}
+            values={CURRENCY_ACTIONS[currencyPair]}
             onValueChange={(value, index) => setCurrencyAction(value)}
             containerStyle={{
               borderBottomColor: '#BBBBBB',
@@ -101,8 +126,8 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
         padding: 16
       }}>
         <CurrencyInput
-          type='Buy'
-          currencySymbol='€'
+          type={buy ? 'Buy' : 'Sell'}
+          currencySymbol={SYMBOL_TABLE[cur1]}
           value={buyVal}
           onChange={
             (text, rawText) => {
@@ -116,16 +141,19 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
         padding: 16
       }}>
         <CurrencyInput
-          type='Sell'
-          currencySymbol='€'
+          type={!buy ? 'Buy' : 'Sell'}
+          currencySymbol={SYMBOL_TABLE[cur2]}
           value={sellVal}
           onChange={
             (text, rawText) => {
               setSellVal(text);
             }
           }
+          disabled
         />
       </View>
+
+      <DatePicker date={expireDate} onChange={(e, d) => setExpireDate(d)} />
 
     </View>
   );
