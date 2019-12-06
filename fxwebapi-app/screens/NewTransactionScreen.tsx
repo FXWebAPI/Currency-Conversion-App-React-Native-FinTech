@@ -15,7 +15,7 @@ const CURRENCY_PAIRS = [
   { label: 'EUR USD', value: 'EUR/USD' },
   { label: 'EUR GBP', value: 'EUR/GBP' },
   { label: 'GBP USD', value: 'GBP/USD' },
-];
+] as const;
 
 const CURRENCY_ACTIONS = {
   'EUR/USD': [
@@ -30,7 +30,7 @@ const CURRENCY_ACTIONS = {
     { label: 'Buy GBP/Sell USD', value: 'GBP/USD' },
     { label: 'Sell GBP/Buy USD', value: 'USD/GBP' },
   ]
-};
+} as const;
 
 const SYMBOL_TABLE = {
   'EUR': '€',
@@ -43,21 +43,34 @@ const ACCOUNTS_MOCK = [
   { label: 'To USD Account', value: 'USD' },
 ];
 
+interface IformState {
+  currencyPair: 'EUR/USD' | 'EUR/GBP' | 'GBP/USD';
+  currencyAction: 'EUR/USD' | 'USD/EUR' | 'EUR/GBP' | 'GBP/EUR' | 'GBP/USD' | 'USD/GBP';
+  buyVal: string;
+  sellVal: string;
+  buyValRaw: string;
+  expireDate: null | Date;
+  accountType: string;
+  exchangeRate: null | number;
+}
+
 
 export default function NewTransactionScreen(props: NewTransactionScreenProps) {
-  const [currencyPair, setCurrencyPair] = useState(CURRENCY_PAIRS[0].value);
-  const [currencyAction, setCurrencyAction] = useState(CURRENCY_ACTIONS[currencyPair][0].value);
-  const [buyVal, setBuyVal] = useState('');
-  const [sellVal, setSellVal] = useState('');
-  const [buyValRaw, setBuyValRaw] = useState('');
-  const [expireDate, setExpireDate] = useState(null);
-  const [accountType, setAccountType] = useState(ACCOUNTS_MOCK[0].value);
-  const [exchangeRate, setExchangeRate] = useState(null);
+  const [formState, setFormState] = useState<IformState>({
+    currencyPair: 'EUR/USD',
+    currencyAction: 'EUR/USD',
+    buyVal: '',
+    sellVal: '',
+    buyValRaw: '',
+    expireDate: null,
+    accountType: 'EUR',
+    exchangeRate: null
+  });
 
-  const buy = currencyAction === currencyPair;
+  const buy = formState.currencyAction === formState.currencyPair;
   // TODO: also check if selected cur pair & action
-  const quoteEnabled = buyVal !== '' && expireDate;
-  const [cur1, cur2] = currencyAction.split('/');
+  const quoteEnabled = formState.buyVal !== '' && formState.expireDate;
+  const [cur1, cur2] = formState.currencyPair.split('/');
 
   return (
     <View style={styles.container}>
@@ -84,19 +97,20 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
       }}>
         <View>
           <UIDropdown
-            activeValue={currencyPair}
+            activeValue={formState.currencyPair}
             values={CURRENCY_PAIRS}
-            onValueChange={(value, index) => {
-              setCurrencyPair(value);
-              setCurrencyAction(CURRENCY_ACTIONS[value][0].value);
+            onValueChange={(value: IformState['currencyPair'], index) => {
+              setFormState({ ...formState, currencyPair: value, currencyAction: CURRENCY_ACTIONS[value][0].value })
             }}
           />
         </View>
         <View>
           <UIDropdown
-            activeValue={currencyAction}
-            values={CURRENCY_ACTIONS[currencyPair]}
-            onValueChange={(value, index) => setCurrencyAction(value)}
+            activeValue={formState.currencyAction}
+            values={CURRENCY_ACTIONS[formState.currencyPair]}
+            onValueChange={(value: IformState['currencyAction'], index) => {
+              setFormState({ ...formState, currencyAction: value });
+            }}
           />
         </View>
       </View>
@@ -107,17 +121,16 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
         <CurrencyInput
           type={buy ? 'Buy' : 'Sell'}
           currencySymbol={SYMBOL_TABLE[cur1]}
-          value={buyVal}
+          value={formState.buyVal}
           onChange={
             (text, rawText) => {
-              setBuyVal(text);
-              setBuyValRaw(rawText);
+              setFormState({ ...formState, buyVal: text, buyValRaw: rawText })
             }
           }
         />
       </View>
 
-      {exchangeRate ?
+      {formState.exchangeRate ?
         <View style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -134,7 +147,7 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
             color: colors.btnPrimary,
             fontSize: 34,
             fontFamily: 'Pangram'
-          }}>{exchangeRate}</Text>
+          }}>{formState.exchangeRate}</Text>
         </View>
 
         : null}
@@ -145,11 +158,10 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
         <CurrencyInput
           type={!buy ? 'Buy' : 'Sell'}
           currencySymbol={SYMBOL_TABLE[cur2]}
-          value={sellVal}
+          value={formState.sellVal}
           onChange={
             (text, rawText) => {
-              setSellVal(text);
-              setBuyValRaw(rawText);
+              setFormState({ ...formState, sellVal: text })
             }
           }
           disabled
@@ -159,14 +171,14 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
       <View style={{
         padding: 16
       }}>
-        <DatePicker date={expireDate} onChange={(d) => setExpireDate(d)} />
+        <DatePicker date={formState.expireDate} onChange={(d) => setFormState({...formState, expireDate: d})} />
       </View>
 
       <View>
         <Dropdown
-          activeValue={accountType}
+          activeValue={formState.accountType}
           values={ACCOUNTS_MOCK}
-          onValueChange={(value, index) => setAccountType(value)}
+          onValueChange={(value, index) => setFormState({...formState, accountType: value})}
           containerStyle={{
             borderBottomColor: '#BBBBBB',
             borderBottomWidth: 1,
@@ -200,7 +212,7 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
         ...shadow.base,
         marginTop: 4
       }}>
-        {!exchangeRate ? <UIBtn title='Get quote' size='lg' type='primary' disabled={!quoteEnabled} style={{
+        {!formState.exchangeRate ? <UIBtn title='Get quote' size='lg' type='primary' disabled={!quoteEnabled} style={{
           flex: 1,
           margin: 16,
           alignSelf: 'stretch',
@@ -208,22 +220,22 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
         }} onPress={() => {
           // get exchange rate from api
           const exrate = 1.13967;
-          const bvr = parseFloat(buyValRaw);
+          const bvr = parseFloat(formState.buyValRaw);
           const calcVal = (buy ? (bvr * exrate) : (bvr / exrate)).toFixed(2);
-          setExchangeRate(exrate);
-          setSellVal(calcVal + '');
+          setFormState({...formState, exchangeRate: exrate, sellVal: calcVal + ''});
         }} /> :
           <>
             <UIBtn type='secondary' title='Cancel 45s' size='lg' style={{
               margin: 16,
               marginRight: 8
-            }} onPress={() => setExchangeRate('')} />
+            }} onPress={() => setFormState({...formState, exchangeRate: null, sellVal: ''}) } />
             <UIBtn type='primary' title='Buy EUR' size='lg' style={{
               margin: 16,
               marginLeft: 8
             }} onPress={() => {
               // perform buy action
               // navigate to receipt page
+              setFormState({...formState, exchangeRate: null, sellVal: '' });
               props.navigation.push('Receipt', {
                 data: {
                   'ID': '29656020',
