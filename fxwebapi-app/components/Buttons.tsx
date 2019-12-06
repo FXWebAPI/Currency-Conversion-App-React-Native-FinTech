@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, GestureResponderEvent, View } from 'react-native';
-import { buttons, buttonText, text, colors } from '../styles';
+import { buttons, buttonText, text, colors, shadow } from '../styles';
 import { MaterialIcons } from '@expo/vector-icons';
 
 interface UIBtnProps {
@@ -31,6 +31,7 @@ interface UIAddRoundProps {
   fill: string;
   color: string;
   onPress?: () => void;
+  shadow?: boolean;
 }
 
 const UIAddRound = (props: UIAddRoundProps) => (
@@ -39,7 +40,8 @@ const UIAddRound = (props: UIAddRoundProps) => (
     width: props.size,
     height: props.size,
     borderRadius: 100,
-    transform: [{ rotate: props.rotate || '0deg' }]
+    transform: [{ rotate: props.rotate || '0deg' }],
+    ...(props.shadow ? shadow.base : {})
   }} onPress={props.onPress}>
     <MaterialIcons
       name='add'
