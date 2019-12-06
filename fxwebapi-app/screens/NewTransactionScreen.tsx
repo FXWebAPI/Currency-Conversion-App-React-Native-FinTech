@@ -44,8 +44,8 @@ const ACCOUNTS_MOCK = [
 ];
 
 interface IformState {
-  currencyPair: 'EUR/USD' | 'EUR/GBP' | 'GBP/USD';
-  currencyAction: 'EUR/USD' | 'USD/EUR' | 'EUR/GBP' | 'GBP/EUR' | 'GBP/USD' | 'USD/GBP';
+  currencyPair: 'EUR/USD' | 'EUR/GBP' | 'GBP/USD' | 'Currency pair';
+  currencyAction: 'EUR/USD' | 'USD/EUR' | 'EUR/GBP' | 'GBP/EUR' | 'GBP/USD' | 'USD/GBP' | 'Action';
   buyVal: string;
   sellVal: string;
   buyValRaw: string;
@@ -57,8 +57,8 @@ interface IformState {
 
 export default function NewTransactionScreen(props: NewTransactionScreenProps) {
   const [formState, setFormState] = useState<IformState>({
-    currencyPair: 'EUR/USD',
-    currencyAction: 'EUR/USD',
+    currencyPair: 'Currency pair',
+    currencyAction: 'Action',
     buyVal: '',
     sellVal: '',
     buyValRaw: '',
@@ -69,7 +69,8 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
 
   const buy = formState.currencyAction === formState.currencyPair;
   // TODO: also check if selected cur pair & action
-  const quoteEnabled = formState.buyVal !== '' && formState.expireDate;
+  const isSelected = formState.currencyPair !== 'Currency pair';
+  const quoteEnabled = formState.buyVal !== '' && formState.expireDate && isSelected;
   const [cur1, cur2] = formState.currencyPair.split('/');
 
   return (
@@ -107,7 +108,7 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
         <View>
           <UIDropdown
             activeValue={formState.currencyAction}
-            values={CURRENCY_ACTIONS[formState.currencyPair]}
+            values={isSelected ? CURRENCY_ACTIONS[formState.currencyPair] : [{label: 'Action', value: 'Action'}]}
             onValueChange={(value: IformState['currencyAction'], index) => {
               setFormState({ ...formState, currencyAction: value });
             }}
@@ -127,6 +128,7 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
               setFormState({ ...formState, buyVal: text, buyValRaw: rawText })
             }
           }
+          disabled={!isSelected}
         />
       </View>
 

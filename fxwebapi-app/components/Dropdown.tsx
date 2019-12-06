@@ -17,7 +17,8 @@ interface DropdownProps {
 
 function Dropdown(props: DropdownProps) {
   const [displayOptions, setDisplayOptions] = useState(false);
-  const activeLabel = props.values.find(({ label, value }) => value === props.activeValue).label;
+  let activeLabelFound = props.values.find(({ label, value }) => value === props.activeValue);
+  let activeLabel = activeLabelFound ? activeLabelFound.label : props.activeValue;
 
   return (
     <>
