@@ -8,6 +8,7 @@ import { Dropdown, UIDropdown } from '../components/Dropdown';
 import { CurrencyInput } from '../components/CurrencyInput';
 import { DatePicker } from '../components/DatePicker';
 import { UIBtn } from '../components/Buttons';
+import { useInterval } from '../utils';
 
 interface NewTransactionScreenProps extends NavigationStackScreenProps { };
 
@@ -66,12 +67,26 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
     accountType: 'EUR',
     exchangeRate: null
   });
+  const [cancelTime, setCancelTime] = useState(45);
 
   const buy = formState.currencyAction === formState.currencyPair;
   // TODO: also check if selected cur pair & action
   const isSelected = formState.currencyPair !== 'Currency pair';
   const quoteEnabled = formState.buyVal !== '' && formState.expireDate && isSelected;
   const [cur1, cur2] = formState.currencyPair.split('/');
+
+  if (cancelTime <= 0) {
+    setFormState({
+      ...formState,
+      exchangeRate: null,
+      sellVal: '',
+    });
+    setCancelTime(45);
+  }
+
+  useInterval(() => {
+    setCancelTime(cancelTime - 1);
+  }, cancelTime === - 1 || !quoteEnabled || !formState.exchangeRate ? null : 1000);
 
   return (
     <View style={styles.container}>
@@ -176,7 +191,7 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
         <DatePicker date={formState.expireDate} onChange={(d) => setFormState({...formState, expireDate: d})} />
       </View>
 
-      <View>
+      {/* <View>
         <Dropdown
           activeValue={formState.accountType}
           values={ACCOUNTS_MOCK}
@@ -198,7 +213,7 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
             padding: 10
           }}
         />
-      </View>
+      </View> */}
 
       <View style={{
         position: 'absolute',
@@ -227,10 +242,13 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
           setFormState({...formState, exchangeRate: exrate, sellVal: calcVal + ''});
         }} /> :
           <>
-            <UIBtn type='secondary' title='Cancel 45s' size='lg' style={{
+            <UIBtn type='secondary' title={`Cancel ${cancelTime}s`} size='lg' style={{
               margin: 16,
               marginRight: 8
-            }} onPress={() => setFormState({...formState, exchangeRate: null, sellVal: ''}) } />
+            }} onPress={() => {
+              setFormState({...formState, exchangeRate: null, sellVal: ''});
+              setCancelTime(45);
+            }} />
             <UIBtn type='primary' title='Buy EUR' size='lg' style={{
               margin: 16,
               marginLeft: 8
