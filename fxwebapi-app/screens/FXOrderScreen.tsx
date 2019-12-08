@@ -123,7 +123,7 @@ export default function FXOrderScreen(props: FXOrderScreenProps) {
                 {...trans}
                 key={i}
                 focused={focusedTrans === i}
-                onPress={() => setFocusedTrans(i)}
+                onPress={() => props.navigation.push('OrderInfo', { data: { ...trans, title: 'Active order 213493', date: (new Date()).toUTCString() } })}
               />
             )
           }

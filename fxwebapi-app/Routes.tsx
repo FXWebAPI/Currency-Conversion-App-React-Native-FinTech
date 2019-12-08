@@ -2,7 +2,7 @@ import React from 'react';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { LoginScreen, DashboardScreen, FXChartScreen, FXSpotScreen, NewTransactionScreen, ReceiptScreen, FXOrderScreen } from './screens';
+import { LoginScreen, DashboardScreen, FXChartScreen, FXSpotScreen, NewTransactionScreen, ReceiptScreen, FXOrderScreen, OrderInfoScreen } from './screens';
 import Icon from './components/Icon';
 
 const AuthStack = createStackNavigator({
@@ -32,7 +32,8 @@ DashboardStack.navigationOptions = ({ navigation }) => {
 const FXSpotStack = createStackNavigator({
   Spot: FXSpotScreen,
   Transaction: NewTransactionScreen,
-  Receipt: ReceiptScreen
+  Receipt: ReceiptScreen,
+  OrderInfo: OrderInfoScreen
 }, {
   defaultNavigationOptions: { header: null },
   initialRouteName: 'Spot'
@@ -51,7 +52,8 @@ FXSpotStack.navigationOptions = ({ navigation }) => {
 const FXOrderStack = createStackNavigator({
   Spot: FXOrderScreen,
   Transaction: NewTransactionScreen,
-  Receipt: ReceiptScreen
+  Receipt: ReceiptScreen,
+  OrderInfo: OrderInfoScreen
 }, {
   defaultNavigationOptions: { header: null },
   initialRouteName: 'Spot'
