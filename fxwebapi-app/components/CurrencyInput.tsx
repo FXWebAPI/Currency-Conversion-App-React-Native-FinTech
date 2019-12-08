@@ -5,21 +5,33 @@ import { colors } from '../styles';
 
 interface CurrencyInputProps {
   type: string;
-  currencySymbol: '€' | '$' | '£';
+  currencySymbol?: '€' | '$' | '£';
   value: string;
   onChange: (text: string, rawText: string) => any;
   disabled?: boolean;
+  color?: string;
 }
 
 const CurrencyInput = (props: CurrencyInputProps) => {
   const [ focused, setFocused ] = useState(false);
-
-  const options = {
-    precision: 2,
-    separator: ',',
-    delimiter: '',
-    unit: props.currencySymbol,
-  };
+  let options;
+  if (props.currencySymbol) {
+    options = {
+      precision: 2,
+      separator: '.',
+      delimiter: ',',
+      unit: props.currencySymbol,
+    };
+  }
+  else {
+    options = {
+      precision: 5,
+      separator: '.',
+      delimiter: ',',
+      unit: '',
+    }
+  }
+  
 
   return (
     <View style={{
@@ -38,7 +50,7 @@ const CurrencyInput = (props: CurrencyInputProps) => {
           fontSize: 40,
           fontFamily: 'Pangram',
           color: colors.textPrimary,
-          backgroundColor: focused ? colors.inputFocused : '#E5E8EB',
+          backgroundColor: focused ? colors.inputFocused : (props.color || '#E5E8EB'),
           flex: 1,
           padding: 16,
           alignSelf: 'stretch',

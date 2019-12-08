@@ -88,8 +88,8 @@ export default function FXOrderScreen(props: FXOrderScreenProps) {
         paddingBottom: 40,
       }}>
         <UIAddRound size={48} fill={colors.btnPrimary} color={colors.btnText} onPress={
-          () => props.navigation.push('Transaction')
-        } />
+          () => props.navigation.push('NewOrder')
+        } shadow />
         <Text style={{
           ...text.p,
           fontSize: 16,
