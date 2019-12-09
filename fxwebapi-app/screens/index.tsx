@@ -7,3 +7,4 @@ export { default as NewTransactionScreen } from './NewTransactionScreen';
 export { default as ReceiptScreen } from './ReceiptScreen';
 export { default as OrderInfoScreen } from './OrderInfoScreen';
 export { default as NewOrderScreen } from './NewOrderScreen';
+export { default as DealBlotterScreen } from './DealBlotterScreen';

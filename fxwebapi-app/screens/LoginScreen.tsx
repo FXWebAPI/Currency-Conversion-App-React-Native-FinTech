@@ -27,7 +27,6 @@ export default function LoginScreen(props: LoginScreenProps) {
 
   return (
     <View style={styles.container}>
-
       <UIFlagPicker
         onValueChange={(value, pos) => setLanguage({ value, pos })}
         selectedValue={language.value}

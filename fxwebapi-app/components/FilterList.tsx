@@ -2,14 +2,16 @@ import React from 'react';
 import { ScrollView, View, TouchableOpacity, Text, StyleProp, ViewStyle } from "react-native"
 import Icon from './Icon';
 import { colors, text } from '../styles';
-import { UIBtnToggleProps, UIBtnToggle } from './Buttons';
+import { UIBtnToggleProps, UIBtnToggle, UIBtn } from './Buttons';
 
 interface FilterListProps {
   title: string;
   items: Array<JSX.Element>;
   onFilterClick?: () => void;
   style?: StyleProp<ViewStyle>;
-  toggle?: UIBtnToggleProps
+  toggle?: UIBtnToggleProps;
+  onCBClick?: () => void;
+  CBTitle?: string;
 };
 
 const FilterList = (props: FilterListProps) => {
@@ -40,6 +42,7 @@ const FilterList = (props: FilterListProps) => {
         </TouchableOpacity>
       </View>
       {props.toggle ? <UIBtnToggle {...props.toggle} /> : null}
+      {props.CBTitle ? <UIBtn type='secondary' title={props.CBTitle} onPress={props.onCBClick} size='lg' /> : null}
       <ScrollView style={{
         flex: 1,
         flexDirection: 'column',
