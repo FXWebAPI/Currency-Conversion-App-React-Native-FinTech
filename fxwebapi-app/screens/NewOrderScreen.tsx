@@ -9,6 +9,7 @@ import { CurrencyInput } from '../components/CurrencyInput';
 import { DatePicker } from '../components/DatePicker';
 import { UIBtn } from '../components/Buttons';
 import { useInterval } from '../utils';
+import { UIPicker } from '../components/Picker';
 
 interface NewOrderScreenProps extends NavigationStackScreenProps { };
 
@@ -44,6 +45,12 @@ const ACCOUNTS_MOCK = [
   { label: 'To USD Account', value: 'USD' },
 ];
 
+const ORDER_TYPES = [
+  { label: 'Order type', value: 'default' },
+  { label: 'Limit', value: 'Limit'},
+  { label: 'Stoploss', value: 'Stoploss'}
+];
+
 interface IformState {
   currencyPair: 'EUR/USD' | 'EUR/GBP' | 'GBP/USD' | 'Currency pair';
   currencyAction: 'EUR/USD' | 'USD/EUR' | 'EUR/GBP' | 'GBP/EUR' | 'GBP/USD' | 'USD/GBP' | 'Action';
@@ -53,6 +60,7 @@ interface IformState {
   accountType: string;
   exchangeRate: string;
   exchangeRateRaw: string;
+  orderType: 'default' | 'Limit' | 'Stoploss';
 }
 
 
@@ -65,7 +73,8 @@ export default function NewOrderScreen(props: NewOrderScreenProps) {
     startDate: null,
     accountType: 'EUR',
     exchangeRate: '',
-    exchangeRateRaw: ''
+    exchangeRateRaw: '',
+    orderType: 'default'
   });
 
   const buy = formState.currencyAction === formState.currencyPair;
@@ -184,7 +193,11 @@ export default function NewOrderScreen(props: NewOrderScreenProps) {
       <View style={{
         padding: 16
       }}>
-        {/* <DatePicker date={formState.expireDate} onChange={(d) => setFormState({...formState, expireDate: d})} /> */}
+        <UIPicker 
+          selectedValue={formState.orderType}
+          onValueChange={(val) => setFormState({...formState, orderType: val})}
+          items={ORDER_TYPES}
+        />
       </View>
 
       {/* <View>
