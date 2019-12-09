@@ -42,7 +42,9 @@ const FilterList = (props: FilterListProps) => {
         </TouchableOpacity>
       </View>
       {props.toggle ? <UIBtnToggle {...props.toggle} /> : null}
-      {props.CBTitle ? <UIBtn type='secondary' title={props.CBTitle} onPress={props.onCBClick} size='lg' /> : null}
+      {props.CBTitle ? <UIBtn type='secondary' title={props.CBTitle} onPress={props.onCBClick} size='md' style={{
+        alignSelf: 'center',
+      }} /> : null}
       <ScrollView style={{
         flex: 1,
         flexDirection: 'column',

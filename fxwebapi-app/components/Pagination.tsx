@@ -12,7 +12,7 @@ interface UIPaginationProps {
 
 const UIPagination = (props: UIPaginationProps) => {
   let minN = Math.max(props.currentPage - 3, 0);
-  let maxN = Math.min(minN - props.currentPage + 3, props.pagesMax);
+  let maxN = Math.min(minN + 3, props.pagesMax);
   const disabledPrev = minN === 0;
   const disabledNext = maxN === props.pagesMax;
   const colorPrev = disabledPrev ? colors.inactiveIcons : colors.textPrimary;

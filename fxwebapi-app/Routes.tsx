@@ -2,7 +2,7 @@ import React from 'react';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { LoginScreen, DashboardScreen, FXChartScreen, FXSpotScreen, NewTransactionScreen, ReceiptScreen, FXOrderScreen, OrderInfoScreen, NewOrderScreen } from './screens';
+import { LoginScreen, DashboardScreen, FXChartScreen, FXSpotScreen, NewTransactionScreen, ReceiptScreen, FXOrderScreen, OrderInfoScreen, NewOrderScreen, DealBlotterScreen } from './screens';
 import Icon from './components/Icon';
 
 const AuthStack = createStackNavigator({
@@ -50,13 +50,13 @@ FXSpotStack.navigationOptions = ({ navigation }) => {
 };
 
 const FXOrderStack = createStackNavigator({
-  Spot: FXOrderScreen,
+  Order: FXOrderScreen,
   NewOrder: NewOrderScreen,
   Receipt: ReceiptScreen,
   OrderInfo: OrderInfoScreen
 }, {
   defaultNavigationOptions: { header: null },
-  initialRouteName: 'Spot'
+  initialRouteName: 'Order'
 });
 FXOrderStack.navigationOptions = ({ navigation }) => {
   let tabBarVisible = true;
@@ -68,6 +68,25 @@ FXOrderStack.navigationOptions = ({ navigation }) => {
     tabBarVisible,
   };
 };
+
+const DealBlotterStack = createStackNavigator({
+  DealBlotter: DealBlotterScreen,
+  OrderInfo: OrderInfoScreen
+}, {
+  defaultNavigationOptions: { header: null },
+  initialRouteName: 'DealBlotter'
+});
+FXOrderStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+
+  return {
+    tabBarVisible,
+  };
+};
+
 
 const AppTabs = createBottomTabNavigator({
   Dashboard: {
@@ -95,7 +114,7 @@ const AppTabs = createBottomTabNavigator({
     }
   },
   Deal: {
-    screen: DashboardScreen,
+    screen: DealBlotterStack,
     navigationOptions: {
       tabBarIcon: ({ focused, tintColor }) => {
         return <Icon name='blotter_icon' size={24} color={tintColor} />
