@@ -8,7 +8,7 @@ import { UIBtn } from '../components/Buttons';
 interface ReceiptScreenProps extends NavigationStackScreenProps { };
 
 export default function ReceiptScreen(props: ReceiptScreenProps) {
-  const data = props.navigation.getParam('data', {});
+  const data = JSON.parse(JSON.stringify(props.navigation.getParam('data', {})));
   const buttonText = props.navigation.getParam('buttonText', 'Back');
 
   return (

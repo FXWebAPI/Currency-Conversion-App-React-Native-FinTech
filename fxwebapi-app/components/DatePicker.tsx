@@ -9,6 +9,7 @@ interface DatePickerProps {
   onChange: (date: Date) => any;
   style?: StyleProp<ViewStyle>;
   text?: string;
+  mode?: 'date' | 'datetime' | 'time';
 };
 
 function DatePicker(props: DatePickerProps) {
@@ -43,6 +44,7 @@ function DatePicker(props: DatePickerProps) {
           setShow(false);
         }}
         minimumDate={new Date()}
+        mode={props.mode ? props.mode : 'date'}
       />
     </TouchableOpacity>
   );
