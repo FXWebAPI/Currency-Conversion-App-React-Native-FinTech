@@ -253,6 +253,22 @@ const MOCK_TRANSACTIONS = [
   },
 ];
 
+const OPTIONS = {
+  'Deal Blotter': {
+    CBTitle:'Export to Excel',
+    onCBClick: () => console.log('export to excel here')
+  },
+  'Orders history': {
+    toggle: {
+      left: 'Executed orders',
+      right: 'Canceled orders',
+      selected: true,
+      onPress: (val: boolean) => null
+    }
+  },
+  'Active orders': {}
+}
+
 export default function DealBlotterScreen(props: DealBlotterScreenProps) {
   const [page, setPage] = useState(0);
   const [tab, setTab] = useState('Deal Blotter');
@@ -341,12 +357,11 @@ export default function DealBlotterScreen(props: DealBlotterScreenProps) {
               <TransactionItem
                 {...trans}
                 key={i}
-                onPress={() => { }}
+                onPress={() => props.navigation.push('OrderInfo', { data: { ...trans, title: 'Active order 213493', date: (new Date()).toUTCString() } })}
               />
             )
           }
-          CBTitle='Export to Excel'
-          onCBClick={() => console.log('export to excel here')}
+          {...OPTIONS[tab]}
         />
         <View style={{
           paddingHorizontal: 22,
