@@ -13,6 +13,8 @@ import { ws } from '../ws';
 
 interface NewTransactionScreenProps extends NavigationStackScreenProps { };
 
+ws.reopen();
+
 const CURRENCY_PAIRS = [
   { label: 'EUR USD', value: 'EUR/USD' },
   { label: 'EUR GBP', value: 'EUR/GBP' },
@@ -54,6 +56,7 @@ interface IformState {
   expireDate: null | Date;
   accountType: string;
   exchangeRate: null | number;
+  ConnectionId?: string;
 }
 
 
@@ -66,7 +69,8 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
     buyValRaw: '',
     expireDate: null,
     accountType: 'EUR',
-    exchangeRate: null
+    exchangeRate: null,
+    ConnectionId: ''
   });
   const [cancelTime, setCancelTime] = useState(45);
   const [getQuote, setGetQuote] = useState(false);
@@ -80,14 +84,14 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
 
   const getData = (ev: MessageEvent) => {
     let data = JSON.parse(ev.data);
-    console.log(formState);
     if (data.IsExecutionRejection) ws.reopen();
-    if (data.IsQuote) {
+    if (data.IsQuote && getQuote) {
       console.log('equal');
       setFormState({
         ...formState,
         exchangeRate: data.offer,
-        sellVal: (data.offer * parseFloat(formState.buyValRaw)).toFixed(2)
+        sellVal: (data.offer * parseFloat(formState.buyValRaw)).toFixed(2),
+        ConnectionId: data.ConnectionId || ''
       });
     }
   }
@@ -283,6 +287,7 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
               margin: 16,
               marginRight: 8
             }} onPress={() => {
+              ws.reopen();
               setFormState({ ...formState, exchangeRate: null, sellVal: '' });
               setGetQuote(false);
               setCancelTime(45);
@@ -291,21 +296,27 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
               margin: 16,
               marginLeft: 8
             }} onPress={() => {
-              // perform buy action
-              // navigate to receipt page
+              let res = fetch('https://demo.fxcib.com/Execution/SendExecutionRequest', {
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  "pair": formState.currencyPair,
+                  "side": formState.currencyAction === formState.currencyPair ? 1 : 2,
+                  "amount": parseFloat(formState.buyValRaw).toFixed(2),
+                  "action": 1,
+                  "limitRate": formState.exchangeRate,
+                  "clientId": "0c5b6754-492b-443b-9c45-b294ae0f8850",
+                  "connectionId": formState.ConnectionId
+                })
+              });
+
               setFormState({ ...formState, exchangeRate: null, sellVal: '' });
               props.navigation.push('Receipt', {
                 data: {
-                  'ID': '29656020',
-                  'Company Code': 'Synnetra',
-                  'Settlement Date': '16.12.2019',
-                  'Action': 'Buy EUR / Sell USD',
-                  'Currency Pair': 'EUR USD',
-                  'Notional amount': '250,00',
-                  'Opposite amount': '281,01',
-                  'Quote': '1.13967',
-                  'User ID': 'John Doe',
-                  'Execution Time Stamp': '16.12.2019 | 06:20:19',
+                  ...formState
                 },
                 buttonText: 'New transaction'
               });
