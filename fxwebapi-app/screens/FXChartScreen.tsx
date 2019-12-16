@@ -46,14 +46,16 @@ export default function FXChartScreen(props: FXChartScreenProps) {
   const [data, setData] = useState([]);
 
   const getData = (ev: MessageEvent) => {
-    let chartData = JSON.parse(ev.data).candles;
-    chartData = chartData.slice(-MAX_DATAPOINTS); // get only MAX_DATAPOINTS of data
-    // format data for candlesticks
-    chartData.forEach((obj) => {
-      obj.range = [ obj.open, obj.close, obj.low, obj.high ];
-      obj.trend = obj.open <= obj.close ? 0 : 1;
-    });
-    setData(chartData);
+    let chartData = JSON.parse(ev.data);
+    if (chartData.candles) {
+      chartData = chartData.candles.slice(-MAX_DATAPOINTS); // get only MAX_DATAPOINTS of data
+      // format data for candlesticks
+      chartData.forEach((obj) => {
+        obj.range = [ obj.open, obj.close, obj.low, obj.high ];
+        obj.trend = obj.open <= obj.close ? 0 : 1;
+      });
+      setData(chartData);
+    }
   }
 
   useEffect(() => {

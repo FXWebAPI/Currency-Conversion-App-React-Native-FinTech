@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationStackScreenProps } from "react-navigation-stack";
 import { View, Text } from "react-native";
 import { text, colors } from '../styles';
@@ -10,51 +10,35 @@ import { TransactionItem } from '../components/TransactionItem';
 
 interface FXSpotScreenProps extends NavigationStackScreenProps { };
 
-const MOCK_TRANSACTIONS = [
-  {
-    currencies: 'EUR USD',
-    date: '07.10.2019 | 16:00',
-    amount: 250
-  },
-  {
-    currencies: 'EUR GBP',
-    date: '13.12.2019 | 15:00',
-    amount: 340.5
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-];
+const DISPLAY_TRANSACTIONS_MAX = 50;
 
 export default function FXSpotScreen(props: FXSpotScreenProps) {
-  const [focusedTrans, setFocusedTrans] = useState(0);
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const getTransactions = async () => {
+    let res = await fetch('https://demo.fxcib.com/api/FXWebAPI/DealBlotter', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "requestId": "5n7658m6v45c4v",
+        "customerCode": "SYNNETRA.HTML.TEST",
+        "request":
+          { "key": "X445Acg7tkxsy7HfZKHgDUKxKW9g4RWazM9NtjWTwdU6nxtQGKgKTMNmSdDcPECHGpvz3PnNVDH4H2Mq" },
+        "filters": {}
+      })
+    });
+    let resJSON = await res.json();
+    setTransactions(resJSON);
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    getTransactions();
+  }, []);
 
   return (
     <View style={{
@@ -97,16 +81,29 @@ export default function FXSpotScreen(props: FXSpotScreenProps) {
         }}>New transaction</Text>
       </View>
 
-      <FilterList title='Last transactions' items={
-        MOCK_TRANSACTIONS.map((trans, i) =>
-          <TransactionItem
-            {...trans}
-            key={i}
-            focused={focusedTrans === i}
-            onPress={() => props.navigation.push('OrderInfo', { data: { ...trans, title: 'Active order 213493', date: (new Date()).toUTCString() } })}
-          />
-        )
-      } />
+      {loading ?
+        <Text style={{
+          ...text.p,
+          fontSize: 16,
+          textAlign: 'center'
+        }}>Loading transactions...</Text>
+        :
+        transactions.length > 0 ?
+          <FilterList title='Last transactions' items={
+            transactions.slice(-DISPLAY_TRANSACTIONS_MAX).map((trans, i) =>
+              <TransactionItem
+                {...trans}
+                key={i}
+                onPress={() => props.navigation.push('OrderInfo', { data: { ...trans, title: `${trans.Status} order ${trans.OrderId}`, date: trans.SettlementDate } })}
+              />
+            )
+          } /> :
+          <Text style={{
+            ...text.p,
+            fontSize: 16,
+            textAlign: 'center'
+          }}>No transactions to show.</Text>
+      }
     </View>
   );
 };

@@ -9,11 +9,24 @@ export interface BaseChartData {
 }
 
 export const ws = (() => {
-  const ws = new WebSocket(WS_ADDR);
+  let ws = new WebSocket(WS_ADDR);
+  let closed = false;
   ws.onopen = () => console.log('socket opened.');
   ws.onerror = (event: ErrorEvent) => console.error('Websocket error observed:', event.message);
+  ws.onclose = () => {
+    console.log('socket closed.');
+    closed = true;
+  }
 
   return {
+    reopen() {
+      ws.close();
+      ws = new WebSocket(WS_ADDR);
+      closed = false;
+    },
+    isClosed() {
+      return closed;
+    },
     onMessage(handler: (this: WebSocket, ev: MessageEvent) => void) {
       ws.addEventListener('message', handler);
     },
@@ -28,6 +41,9 @@ export const ws = (() => {
         strMessage = message;
       }
       ws.send(strMessage);
+    },
+    close() {
+      ws.close();
     },
     askChartData(args: BaseChartData) {
       let message : any = {
@@ -45,18 +61,23 @@ export const ws = (() => {
     askCurrencyData(args: any = {}) {
       let message : any = {
         messageType: 1,
-        side: 1,
+        side: args.side || 1,
         action: 1,
-        amount: 10000,
+        amount: args.amount || 10000,
         clientId: args.clientId || '543v36c43x',
-        pair: ''
+        pair: args.pair || '',
       };
-      for (let v of ['EUR/USD', 'EUR/GBP', 'GBP/USD']) {
-        message.pair = v;
-        let msg = JSON.stringify(message);
-        console.log(msg);
-        ws.send(msg);
-      };
+      if (!args.pair) {
+        for (let v of ['EUR/USD', 'EUR/GBP', 'GBP/USD']) {
+          message.pair = v;
+          let msg = JSON.stringify(message);
+          console.log(msg);
+          ws.send(msg);
+        };
+      }
+      else ws.send(JSON.stringify(message));  
+      console.log(JSON.stringify(message));
+      console.log(ws.CLOSED);
     }
   };
 })();

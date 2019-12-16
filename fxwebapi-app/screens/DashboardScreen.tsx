@@ -46,6 +46,11 @@ export default function DashboardScreen(props: DashboardScreenProps) {
     }
   }, []);
 
+  // when navingating elsewhere should reopen socket
+  if (!props.navigation.isFocused()) {
+    ws.reopen();
+  }
+
   return (
     <ScrollView style={styles.container}>
 
