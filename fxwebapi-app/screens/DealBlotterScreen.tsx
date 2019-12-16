@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationStackScreenProps } from "react-navigation-stack";
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { text, colors } from '../styles';
@@ -10,268 +10,85 @@ import { UIPagination } from '../components/Pagination';
 
 interface DealBlotterScreenProps extends NavigationStackScreenProps { };
 
-const MOCK_TRANSACTIONS = [
-  {
-    currencies: 'EUR USD',
-    date: '07.10.2019 | 16:00',
-    amount: 250
-  },
-  {
-    currencies: 'EUR GBP',
-    date: '13.12.2019 | 15:00',
-    amount: 340.5
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'EUR USD',
-    date: '07.10.2019 | 16:00',
-    amount: 250
-  },
-  {
-    currencies: 'EUR GBP',
-    date: '13.12.2019 | 15:00',
-    amount: 340.5
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'EUR USD',
-    date: '07.10.2019 | 16:00',
-    amount: 250
-  },
-  {
-    currencies: 'EUR GBP',
-    date: '13.12.2019 | 15:00',
-    amount: 340.5
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'EUR USD',
-    date: '07.10.2019 | 16:00',
-    amount: 250
-  },
-  {
-    currencies: 'EUR GBP',
-    date: '13.12.2019 | 15:00',
-    amount: 340.5
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'EUR USD',
-    date: '07.10.2019 | 16:00',
-    amount: 250
-  },
-  {
-    currencies: 'EUR GBP',
-    date: '13.12.2019 | 15:00',
-    amount: 340.5
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'EUR USD',
-    date: '07.10.2019 | 16:00',
-    amount: 250
-  },
-  {
-    currencies: 'EUR GBP',
-    date: '13.12.2019 | 15:00',
-    amount: 340.5
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-];
-
-const OPTIONS = {
-  'Deal Blotter': {
-    CBTitle:'Export to Excel',
-    onCBClick: () => console.log('export to excel here')
-  },
-  'Orders history': {
-    toggle: {
-      left: 'Executed orders',
-      right: 'Canceled orders',
-      selected: true,
-      onPress: (val: boolean) => null
-    }
-  },
-  'Active orders': {}
-}
-
 export default function DealBlotterScreen(props: DealBlotterScreenProps) {
   const [page, setPage] = useState(0);
   const [tab, setTab] = useState('Deal Blotter');
+  const [exec, setExec] = useState(true);
+  const [transactionsPre, setTransactions] = useState([]);
+
+  const OPTIONS = {
+    'Deal Blotter': {
+      CBTitle: 'Export to Excel',
+      onCBClick: () => console.log('export to excel here')
+    },
+    'Orders history': {
+      toggle: {
+        left: 'Executed orders',
+        right: 'Canceled orders',
+        selected: exec,
+        onPress: (val: boolean) => setExec(val)
+      }
+    },
+    'Active orders': {}
+  };
+
+
+  const getOrders = async () => {
+    let res = await fetch('https://demo.fxcib.com/api/FXWebAPI/OrderBlotter', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "requestId": "5n7658m6v45c4v",
+        "customerCode": "SYNNETRA.HTML.TEST",
+        "request": {
+          "key": "X445Acg7tkxsy7HfZKHgDUKxKW9g4RWazM9NtjWTwdU6nxtQGKgKTMNmSdDcPECHGpvz3PnNVDH4H2Mq"
+        },
+        "filters": {}
+      })
+    });
+    let resJSON = await res.json();
+    setTransactions(resJSON);
+  }
+
+  const getTransactions = async () => {
+    let res = await fetch('https://demo.fxcib.com/api/FXWebAPI/DealBlotter', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "requestId": "5n7658m6v45c4v",
+        "customerCode": "SYNNETRA.HTML.TEST",
+        "request":
+          { "key": "X445Acg7tkxsy7HfZKHgDUKxKW9g4RWazM9NtjWTwdU6nxtQGKgKTMNmSdDcPECHGpvz3PnNVDH4H2Mq" },
+        "filters": {}
+      })
+    });
+    let resJSON = await res.json();
+    setTransactions(resJSON);
+  }
+
+  const getData = () => {
+    if (tab === 'Deal Blotter') getTransactions();
+    else getOrders();
+    setPage(0);
+  }
+
+  useEffect(() => {
+    getData();
+  }, [tab]);
+
+  let transactions = [];
+  if (tab === 'Deal Blotter') transactions = transactionsPre;
+  else if (tab === 'Active orders') transactions = transactionsPre.filter(({ Status }) => Status === 'Active');
+  else if (exec) transactions = transactionsPre.filter(({ Status }) => Status === 'Filled');
+  else transactions = transactionsPre.filter(({ Status }) => Status === 'Cancelled');
+
+
 
   return (
     <ScrollView style={{
@@ -341,7 +158,7 @@ export default function DealBlotterScreen(props: DealBlotterScreenProps) {
           <Text style={{
             ...text.p,
             fontWeight: tab === 'Active orders' ? '500' : 'normal'
-          }}>Active orders ({MOCK_TRANSACTIONS.length})</Text>
+          }}>Active orders ({transactionsPre.filter(({ Status }) => Status === 'Active').length})</Text>
         </TouchableOpacity>
       </View>
 
@@ -353,11 +170,11 @@ export default function DealBlotterScreen(props: DealBlotterScreenProps) {
         <FilterList
           title='Filters'
           items={
-            MOCK_TRANSACTIONS.slice(page * 10, page * 10 + 10).map((trans, i) =>
+            transactions.slice(page * 10, page * 10 + 10).map((trans, i) =>
               <TransactionItem
                 {...trans}
                 key={i}
-                onPress={() => props.navigation.push('OrderInfo', { data: { ...trans, title: 'Active order 213493', date: (new Date()).toUTCString() } })}
+                onPress={() => props.navigation.push('OrderInfo', { data: { ...trans, title: `${trans.Status} order ${trans.OrderId}`, date: trans.SettlementDate } })}
               />
             )
           }
@@ -371,7 +188,7 @@ export default function DealBlotterScreen(props: DealBlotterScreenProps) {
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <UIPagination currentPage={page} pagesMax={Math.floor(MOCK_TRANSACTIONS.length / 10)} onPageChange={(p) => setPage(p)} />
+          <UIPagination currentPage={page} pagesMax={Math.floor(transactions.length / 10)} onPageChange={(p) => setPage(p)} />
         </View>
       </View>
 

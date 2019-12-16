@@ -70,6 +70,7 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
   });
   const [cancelTime, setCancelTime] = useState(45);
   const [getQuote, setGetQuote] = useState(false);
+  const [changed, setChanged] = useState(false);
 
   const buy = formState.currencyAction === formState.currencyPair;
   // TODO: also check if selected cur pair & action
@@ -79,9 +80,10 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
 
   const getData = (ev: MessageEvent) => {
     let data = JSON.parse(ev.data);
-    console.log(ev.data);
+    console.log(formState);
     if (data.IsExecutionRejection) ws.reopen();
-    if (data.IsQuote && parseFloat(data.OrderQty).toFixed(2) == parseFloat(formState.buyValRaw).toFixed(2)) {
+    if (data.IsQuote) {
+      console.log('equal');
       setFormState({
         ...formState,
         exchangeRate: data.offer,
@@ -90,12 +92,13 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
     }
   }
 
-  if (getQuote) {
+  if (getQuote && changed) {
     ws.askCurrencyData({
       amount: parseFloat(formState.buyValRaw),
       pair: formState.currencyPair,
-      side: buy ? 1 : 2
+      side: formState.currencyAction === formState.currencyPair ? 1 : 2
     });
+    setChanged(false);
   }
 
   useEffect(() => {
@@ -108,7 +111,7 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
     return () => {
       ws.onMessageDestroy(getData);
     }
-  }, []);
+  }, [formState]);
 
   if (cancelTime <= 0) {
     setFormState({
@@ -151,7 +154,8 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
             activeValue={formState.currencyPair}
             values={CURRENCY_PAIRS}
             onValueChange={(value: IformState['currencyPair'], index) => {
-              setFormState({ ...formState, currencyPair: value, currencyAction: CURRENCY_ACTIONS[value][0].value })
+              setFormState({ ...formState, currencyPair: value, currencyAction: CURRENCY_ACTIONS[value][0].value });
+              setChanged(true);
             }}
           />
         </View>
@@ -161,6 +165,7 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
             values={isSelected ? CURRENCY_ACTIONS[formState.currencyPair] : [{ label: 'Action', value: 'Action' }]}
             onValueChange={(value: IformState['currencyAction'], index) => {
               setFormState({ ...formState, currencyAction: value });
+              setChanged(true);
             }}
           />
         </View>
@@ -175,7 +180,8 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
           value={formState.buyVal}
           onChange={
             (text, rawText) => {
-              setFormState({ ...formState, buyVal: text, buyValRaw: rawText })
+              setFormState({ ...formState, buyVal: text, buyValRaw: rawText });
+              setChanged(true);
             }
           }
           disabled={!isSelected}
@@ -278,6 +284,7 @@ export default function NewTransactionScreen(props: NewTransactionScreenProps) {
               marginRight: 8
             }} onPress={() => {
               setFormState({ ...formState, exchangeRate: null, sellVal: '' });
+              setGetQuote(false);
               setCancelTime(45);
             }} />
             <UIBtn type='primary' title='Buy EUR' size='lg' style={{

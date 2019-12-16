@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationStackScreenProps } from "react-navigation-stack";
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { text, colors } from '../styles';
@@ -9,53 +9,42 @@ import { TransactionItem } from '../components/TransactionItem';
 
 interface FXOrderScreenProps extends NavigationStackScreenProps { };
 
-const MOCK_TRANSACTIONS = [
-  {
-    currencies: 'EUR USD',
-    date: '07.10.2019 | 16:00',
-    amount: 250
-  },
-  {
-    currencies: 'EUR GBP',
-    date: '13.12.2019 | 15:00',
-    amount: 340.5
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-  {
-    currencies: 'USD EUR',
-    date: '22.12.2019 | 09:00',
-    amount: 250
-  },
-];
-
 export default function FXOrderScreen(props: FXOrderScreenProps) {
-  const [focusedTrans, setFocusedTrans] = useState(0);
+  const [showActiveOrders, setShowActiveOrders] = useState(5);
+  const [showOrders, setShowOrders] = useState(5);
   const [executedOrders, setExecutedOrders] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState([]);
 
+  const getOrders = async () => {
+    let res = await fetch('https://demo.fxcib.com/api/FXWebAPI/OrderBlotter', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "requestId": "5n7658m6v45c4v",
+        "customerCode": "SYNNETRA.HTML.TEST",
+        "request": {
+          "key": "X445Acg7tkxsy7HfZKHgDUKxKW9g4RWazM9NtjWTwdU6nxtQGKgKTMNmSdDcPECHGpvz3PnNVDH4H2Mq"
+        },
+        "filters": {}
+      })
+    });
+    let resJSON = await res.json();
+    setOrders(resJSON);
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    getOrders();
+  }, []);
+
+  const activeOrders = orders.filter(({ Status }) => Status === 'Active');
+  const exOrders = orders.filter(({ Status }) => Status === 'Filled');
+  const canOrders = orders.filter(({ Status }) => Status === 'Cancelled');
+  
   return (
     <ScrollView style={{
       backgroundColor: '#EFF2F5',
@@ -102,43 +91,59 @@ export default function FXOrderScreen(props: FXOrderScreenProps) {
         backgroundColor: '#FFF',
         alignContent: 'center'
       }}>
-        <FilterList title='Last transactions' items={
-          MOCK_TRANSACTIONS.slice(-5).map((trans, i) =>
-            <TransactionItem
-              {...trans}
-              key={i}
-              focused={focusedTrans === i}
-              onPress={() => props.navigation.push('OrderInfo', { data: { ...trans, title: 'Active order 213493', date: (new Date()).toUTCString() } })}
+        {loading ?
+          <Text style={{
+            ...text.p,
+            fontSize: 16,
+            textAlign: 'center'
+          }}>Loading transactions...</Text>
+          :
+          <>
+            <FilterList title='Last transactions' items={
+              activeOrders.slice(-showActiveOrders).map((trans, i) =>
+                <TransactionItem
+                  {...trans}
+                  key={i}
+                  onPress={() => props.navigation.push('OrderInfo', { data: { ...trans, title: `${trans.Status} order ${trans.OrderId}`, date: trans.SettlementDate } })}
+                />
+              )
+            }
             />
-          )
-        }
-        />
-        <UIBtn type='secondary' title='See all' size='lg' style={{ margin: 16, alignSelf: 'center' }} />
+            {activeOrders.length > 5 ? <UIBtn type='secondary' title={`See ${showActiveOrders ? 'all' : 'less'}`}
+              size='lg' style={{ margin: 16, alignSelf: 'center' }}
+              onPress={() => setShowActiveOrders(!showActiveOrders ? 5 : 0)}
+            /> : null}
 
-        <FilterList
-          title='Orders history'
-          items={
-            MOCK_TRANSACTIONS.slice(-5).map((trans, i) =>
-              <TransactionItem
-                {...trans}
-                key={i}
-                focused={focusedTrans === i}
-                onPress={() => props.navigation.push('OrderInfo', { data: { ...trans, title: 'Active order 213493', date: (new Date()).toUTCString() } })}
-              />
-            )
-          }
-          style={{
-            borderTopColor: '#DCDCDC',
-            borderTopWidth: 1,
-          }}
-          toggle={{
-            left: 'Executed orders',
-            right: 'Canceled orders',
-            selected: executedOrders,
-            onPress: (val: boolean) => setExecutedOrders(val)
-          }}
-        />
-        <UIBtn type='secondary' title='See all' size='lg' style={{ margin: 16, alignSelf: 'center' }} />
+            <FilterList
+              title='Orders history'
+              items={
+                (executedOrders ? exOrders : canOrders).slice(-showOrders).map((trans, i) =>
+                  <TransactionItem
+                    {...trans}
+                    key={i}
+                    onPress={() => props.navigation.push('OrderInfo', { data: { ...trans, title: `${trans.Status} order ${trans.OrderId}`, date: trans.SettlementDate } })}
+                  />
+                )
+              }
+              style={{
+                borderTopColor: '#DCDCDC',
+                borderTopWidth: 1,
+              }}
+              toggle={{
+                left: 'Executed orders',
+                right: 'Canceled orders',
+                selected: executedOrders,
+                onPress: (val: boolean) => setExecutedOrders(val)
+              }}
+            />
+            {exOrders.length > 5 || canOrders.length > 5 ?
+            <UIBtn type='secondary' title={`See ${showOrders ? 'all' : 'less'}`}
+              size='lg' style={{ margin: 16, alignSelf: 'center' }}
+              onPress={() => setShowOrders(!showOrders ? 5 : 0)}
+            />
+            : null}
+          </>
+        }
       </View>
 
     </ScrollView>
