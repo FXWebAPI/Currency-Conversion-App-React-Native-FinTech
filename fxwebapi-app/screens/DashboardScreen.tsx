@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, ScrollView, View, TouchableOpacity } from 'react-native';
 import { UIStatus } from '../components/Status';
 import { UIDashboardCard } from '../components/DashboardCard';
@@ -7,12 +7,44 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { UIAddRound } from '../components/Buttons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { NavigationStackScreenProps } from 'react-navigation-stack';
+import { ws } from '../ws';
 
 interface DashboardScreenProps extends NavigationStackScreenProps {
 }
 
 export default function DashboardScreen(props: DashboardScreenProps) {
   const [addClicked, setAddClicked] = useState(false);
+  const [curData, setCurData] = useState({
+    'EUR/USD': ['load', 'load'],
+    'EUR/GBP': ['load', 'load'],
+    'GBP/USD': ['load', 'load']
+  });
+
+  const getData = (ev: MessageEvent) => {
+    let currencyData = JSON.parse(ev.data);
+    if (currencyData.IsQuote) {
+      let symbolVal = currencyData.symbolValue;
+      console.log(symbolVal);
+      let svals = [
+        currencyData.offer.toFixed(4),
+        currencyData.offer2 ? currencyData.offer2.toFixed(4) : (1 / Math.max(currencyData.offer, 0.1)).toFixed(4)
+      ]
+      setCurData({...curData, [symbolVal]: svals});
+    }
+  }
+
+  useEffect(() => {
+    function initFunc() {
+      ws.onMessage(getData);
+      ws.askCurrencyData();
+    }
+
+    initFunc();
+
+    return () => {
+      ws.onMessageDestroy(getData);
+    }
+  }, []);
 
   return (
     <ScrollView style={styles.container}>
@@ -65,16 +97,16 @@ export default function DashboardScreen(props: DashboardScreenProps) {
           updating
         />
         <UIDashboardCard pair={['EUR', 'USD']}
-          sell='1.1396'
-          buy='1.1398'
+          sell={curData['EUR/USD'][0]}
+          buy={curData['EUR/USD'][1]}
         />
         <UIDashboardCard pair={['EUR', 'GBP']}
-          sell='1.1396'
-          buy='1.1398'
+          sell={curData['EUR/GBP'][0]}
+          buy={curData['EUR/GBP'][1]}
         />
         <UIDashboardCard pair={['GBP', 'USD']}
-          sell='1.1396'
-          buy='1.1398'
+          sell={curData['GBP/USD'][0]}
+          buy={curData['GBP/USD'][1]}
         />
       </View>
 

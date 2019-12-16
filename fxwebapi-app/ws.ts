@@ -41,6 +41,22 @@ export const ws = (() => {
         message.end = args.dates.end;
       }
       ws.send(JSON.stringify(message));
+    },
+    askCurrencyData(args: any = {}) {
+      let message : any = {
+        messageType: 1,
+        side: 1,
+        action: 1,
+        amount: 10000,
+        clientId: args.clientId || '543v36c43x',
+        pair: ''
+      };
+      for (let v of ['EUR/USD', 'EUR/GBP', 'GBP/USD']) {
+        message.pair = v;
+        let msg = JSON.stringify(message);
+        console.log(msg);
+        ws.send(msg);
+      };
     }
   };
 })();
